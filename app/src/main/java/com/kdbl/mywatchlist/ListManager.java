@@ -32,12 +32,32 @@ public class ListManager
             for(int i = start; i < mid; i++) {
                 Anime lVal = arr.get(i);
                 int rIndex = i - start + mid;
+                Anime rVal = null;
                 if(rIndex < end) {
-                    Anime rVal = arr.get(rIndex);
+                    rVal = arr.get(rIndex);
+                }
+
+                if(compare(lVal, rVal) > 0) {
+
                 }
             }
         }
         return null;
+    }
+
+    private int compare(Anime lVal, Anime rVal) {
+        if(lVal.mRating > rVal.mRating) {
+            return 1;
+        }
+        else if(lVal.mRating < rVal.mRating) {
+            return -1;
+        }
+
+        if (lVal.mTitle.compareTo(rVal.mTitle) < 0) {
+            return 1;
+        }else {
+            return -1;
+        }
     }
 
 
