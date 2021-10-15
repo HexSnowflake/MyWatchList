@@ -32,37 +32,27 @@ public class ListManager
             int lIndex = 0;
             int rIndex = 0;
             while(!hasEnd) {
-                Anime lVal = null;
-                if(lIndex < lArr.size())
-                    lArr.get(lIndex);
-                Anime rVal = null;
-                if(rIndex < rArr.size())
-                    rArr.get(rIndex);
+                if(lIndex < lArr.size() && rIndex < rArr.size()) {
+                    Anime lVal = lArr.get(lIndex);
+                    Anime rVal = rArr.get(rIndex);
 
-                if(compare(lVal, rVal) > 0) {
-                    combined.add(lVal);
+                    if(compare(lVal, rVal) > 0) {
+                        combined.add(lVal);
+                        lIndex++;
+                    } else {
+                        combined.add(rVal);
+                        rIndex++;
+                    }
+                }
+                else if(lIndex < lArr.size() && rIndex >= rArr.size()) {
+                    combined.add(lArr.get(lIndex));
                     lIndex++;
                 }
-                else if(compare(lVal, rVal) < 0) {
-                    combined.add(rVal);
+                else if(lIndex >= lArr.size() && rIndex < rArr.size()) {
+                    combined.add(rArr.get(rIndex));
                     rIndex++;
                 } else {
-                    if(lVal == null) {
-                        if(rVal == null) {
-                            hasEnd = true;
-                        } else {
-                            combined.add(rVal);
-                            rIndex++;
-                        }
-                    }
-                    if(rVal == null) {
-                        if(lVal == null) {
-                            hasEnd = true;
-                        } else {
-                            combined.add(lVal);
-                            rIndex++;
-                        }
-                    }
+                    hasEnd = true;
                 }
             }
         }
@@ -70,10 +60,6 @@ public class ListManager
     }
 
     private int compare(Anime lVal, Anime rVal) {
-        if(lVal == null || rVal == null) {
-            return 0;
-        }
-
         if(lVal.mRating > rVal.mRating) {
             return 1;
         }
