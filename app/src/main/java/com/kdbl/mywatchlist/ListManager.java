@@ -18,34 +18,62 @@ public class ListManager
     }
 
     public ArrayList<Anime> sort(ArrayList<Anime> arr) {
-        ArrayList<Anime> r = new ArrayList<>();
-        sort(arr, r, 0, arr.size());
-        return r;
+        return sort(arr, 0, arr.size());
     }
 
-    private ArrayList<Anime> sort(ArrayList<Anime> arr, ArrayList<Anime> r, int start, int end) {
+    private ArrayList<Anime> sort(ArrayList<Anime> arr, int start, int end) {
+        ArrayList<Anime> combined = new ArrayList<>();
         if(start != end) {
             int mid = (start + end) / 2;
-            sort(arr, r, start, mid);
-            sort(arr, r, mid, end);
+            ArrayList<Anime> lArr = sort(arr, start, mid);
+            ArrayList<Anime> rArr = sort(arr, mid, end);
 
-            for(int i = start; i < mid; i++) {
-                Anime lVal = arr.get(i);
-                int rIndex = i - start + mid;
+            boolean hasEnd = false;
+            int lIndex = 0;
+            int rIndex = 0;
+            while(!hasEnd) {
+                Anime lVal = null;
+                if(lIndex < lArr.size())
+                    lArr.get(lIndex);
                 Anime rVal = null;
-                if(rIndex < end) {
-                    rVal = arr.get(rIndex);
-                }
+                if(rIndex < rArr.size())
+                    rArr.get(rIndex);
 
                 if(compare(lVal, rVal) > 0) {
-
+                    combined.add(lVal);
+                    lIndex++;
+                }
+                else if(compare(lVal, rVal) < 0) {
+                    combined.add(rVal);
+                    rIndex++;
+                } else {
+                    if(lVal == null) {
+                        if(rVal == null) {
+                            hasEnd = true;
+                        } else {
+                            combined.add(rVal);
+                            rIndex++;
+                        }
+                    }
+                    if(rVal == null) {
+                        if(lVal == null) {
+                            hasEnd = true;
+                        } else {
+                            combined.add(lVal);
+                            rIndex++;
+                        }
+                    }
                 }
             }
         }
-        return null;
+        return combined;
     }
 
     private int compare(Anime lVal, Anime rVal) {
+        if(lVal == null || rVal == null) {
+            return 0;
+        }
+
         if(lVal.mRating > rVal.mRating) {
             return 1;
         }
