@@ -18,42 +18,44 @@ public class ListManager
     }
 
     public ArrayList<Anime> sort(ArrayList<Anime> arr) {
-        return sort(arr, 0, arr.size());
+        if(arr.size() <= 1) {
+            return  arr;
+        }
+
+        ArrayList<Anime> l1 = copy(arr, 0, arr.size() / 2);
+        ArrayList<Anime> l2 = copy(arr, arr.size() / 2, arr.size());
+
+        l1 = sort(l1);
+        l2 = sort(l2);
+
+        return combine(l1, l2);
     }
 
-    private ArrayList<Anime> sort(ArrayList<Anime> arr, int start, int end) {
+    private ArrayList<Anime> combine(ArrayList<Anime> left, ArrayList<Anime> right) {
         ArrayList<Anime> combined = new ArrayList<>();
-        if(start != end) {
-            int mid = (start + end) / 2;
-            ArrayList<Anime> lArr = sort(arr, start, mid);
-            ArrayList<Anime> rArr = sort(arr, mid, end);
+        int leftIndex = 0;
+        int rightIndex = 0;
 
-            boolean hasEnd = false;
-            int lIndex = 0;
-            int rIndex = 0;
-            while(!hasEnd) {
-                if(lIndex < lArr.size() && rIndex < rArr.size()) {
-                    Anime lVal = lArr.get(lIndex);
-                    Anime rVal = rArr.get(rIndex);
+        while(leftIndex < left.size() || rightIndex < right.size()) {
+            if(leftIndex < left.size() && rightIndex < right.size()) {
+                Anime lVal = left.get(leftIndex);
+                Anime rVal = right.get(rightIndex);
 
-                    if(compare(lVal, rVal) > 0) {
-                        combined.add(lVal);
-                        lIndex++;
-                    } else {
-                        combined.add(rVal);
-                        rIndex++;
-                    }
-                }
-                else if(lIndex < lArr.size() && rIndex >= rArr.size()) {
-                    combined.add(lArr.get(lIndex));
-                    lIndex++;
-                }
-                else if(lIndex >= lArr.size() && rIndex < rArr.size()) {
-                    combined.add(rArr.get(rIndex));
-                    rIndex++;
+                if(compare(lVal, rVal) > 0) {
+                    combined.add(lVal);
+                    leftIndex++;
                 } else {
-                    hasEnd = true;
+                    combined.add(rVal);
+                    rightIndex++;
                 }
+            }
+            else if(leftIndex < left.size()) {
+                combined.add(left.get(leftIndex));
+                leftIndex++;
+            }
+            else {
+                combined.add(right.get(rightIndex));
+                rightIndex++;
             }
         }
         return combined;
@@ -72,6 +74,18 @@ public class ListManager
         }else {
             return -1;
         }
+    }
+
+    private ArrayList<Anime> copy(ArrayList<Anime> list, int start, int end) {
+        if(start < 0 || start > list.size() || end > list.size()) {
+            throw new java.lang.IndexOutOfBoundsException();
+        }
+
+        ArrayList<Anime> r = new ArrayList<>();
+        for(int i = start; i < end; i++) {
+            r.add(list.get(i));
+        }
+        return r;
     }
 
 
