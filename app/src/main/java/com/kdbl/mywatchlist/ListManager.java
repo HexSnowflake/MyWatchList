@@ -4,18 +4,7 @@ import java.util.ArrayList;
 
 public class ListManager
 {
-    private class Anime {
-
-        String mTitle;
-        int mRating;
-        boolean mIsSketch;
-
-        public Anime(String title, int rating, boolean isSketch) {
-            mTitle = title;
-            mRating = rating;
-            mIsSketch = isSketch;
-        }
-    }
+//    temporarily made public & static for testing
 
     public ArrayList<Anime> sort(ArrayList<Anime> arr) {
         if(arr.size() <= 1) {
@@ -41,7 +30,7 @@ public class ListManager
                 Anime lVal = left.get(leftIndex);
                 Anime rVal = right.get(rightIndex);
 
-                if(compare(lVal, rVal) > 0) {
+                if(lVal.compareTo(rVal) > 0) {
                     combined.add(lVal);
                     leftIndex++;
                 } else {
@@ -59,21 +48,6 @@ public class ListManager
             }
         }
         return combined;
-    }
-
-    private int compare(Anime lVal, Anime rVal) {
-        if(lVal.mRating > rVal.mRating) {
-            return 1;
-        }
-        else if(lVal.mRating < rVal.mRating) {
-            return -1;
-        }
-
-        if (lVal.mTitle.compareTo(rVal.mTitle) < 0) {
-            return 1;
-        }else {
-            return -1;
-        }
     }
 
     private ArrayList<Anime> copy(ArrayList<Anime> list, int start, int end) {
