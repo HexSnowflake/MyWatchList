@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_anime);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

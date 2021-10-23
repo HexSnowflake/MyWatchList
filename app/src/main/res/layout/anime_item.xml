@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/text_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -29,14 +29,14 @@
                 android:text="TextView"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView3"
+                app:layout_constraintEnd_toStartOf="@+id/text_rating"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/text_rating"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
