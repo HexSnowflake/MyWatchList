@@ -15,7 +15,7 @@ public final class AnimeDatabaseContract {
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY, " +
                         COLUMN_ANIME_TITLE + " TEXT UNIQUE NOT NULL, " +
-                        COLUMN_ANIME_RATING + "INTEGER NOT NULL, " +
+                        COLUMN_ANIME_RATING + " INTEGER NOT NULL, " +
                         COLUMN_IS_SKETCH + " TEXT NOT NULL)";
     }
 }

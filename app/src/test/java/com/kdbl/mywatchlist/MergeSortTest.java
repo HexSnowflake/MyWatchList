@@ -18,7 +18,7 @@ public class MergeSortTest {
     public void alphabeticalSort() {
         ListManager tester = new ListManager();
 
-        ArrayList<Anime> testArr = new ArrayList<>();
+        List<Anime> testArr = new ArrayList<>();
         testArr.add(new Anime("Apple", 9, false));
         testArr.add(new Anime("All", 9, false));
         testArr.add(new Anime("Allay", 9, false));
@@ -40,7 +40,7 @@ public class MergeSortTest {
     public void ratingSort() {
         ListManager tester = new ListManager();
 
-        ArrayList<Anime> testArray = new ArrayList<>();
+        List<Anime> testArray = new ArrayList<>();
         testArray.add(new Anime("Clannad", 9, false));
         testArray.add(new Anime("bouku", 5, true));
         testArray.add(new Anime("Slime", 8, false));
@@ -62,9 +62,9 @@ public class MergeSortTest {
     public void edgeCaseSort() {
         ListManager tester = new ListManager();
 
-        ArrayList<Anime> testArray = new ArrayList<>();
+        List<Anime> testArray = new ArrayList<>();
 
-        ArrayList<Anime> testArray2 = new ArrayList<>();
+        List<Anime> testArray2 = new ArrayList<>();
         testArray2.add(new Anime("Violet", 9, false));
 
         testArray = tester.sort(testArray);
@@ -78,7 +78,7 @@ public class MergeSortTest {
     public void comprehensiveSort() {
         ListManager tester = new ListManager();
 
-        ArrayList<Anime> testArray = new ArrayList<>();
+        List<Anime> testArray = new ArrayList<>();
         testArray.add(new Anime("re:zero", 6, false));
         testArray.add(new Anime("eromanga sensei", 7, true));
         testArray.add(new Anime("senryuu girl", 8, false));
