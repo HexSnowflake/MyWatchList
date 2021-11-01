@@ -42,8 +42,10 @@ public class ListManager
                 AnimeInfoEntry.COLUMN_ANIME_TITLE,
                 AnimeInfoEntry.COLUMN_ANIME_RATING,
                 AnimeInfoEntry.COLUMN_IS_SKETCH};
+        String orderBy = AnimeInfoEntry.COLUMN_ANIME_RATING + " DESC"
+                + "," + AnimeInfoEntry.COLUMN_ANIME_TITLE;
         final Cursor animeCursor = db.query(AnimeInfoEntry.TABLE_NAME, animeListColumns,
-                null, null, null, null, null);
+                null, null, null, null, orderBy);
         loadAnimeFromDatabase(animeCursor);
     }
 
@@ -108,5 +110,7 @@ public class ListManager
         return r;
     }
 
-
+    public List<Anime> getAnimeList() {
+        return mAnimeList;
+    }
 }

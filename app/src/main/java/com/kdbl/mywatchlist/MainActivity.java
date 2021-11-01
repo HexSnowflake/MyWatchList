@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private WatchListOpenHelper mDbOpenHelper;
@@ -21,24 +23,23 @@ public class MainActivity extends AppCompatActivity {
         mDbOpenHelper = new WatchListOpenHelper(this);
 
         initializeDisplayContent();
-        displayNote();
     }
 
     private void initializeDisplayContent() {
         ListManager.loadDatabase(mDbOpenHelper);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.list_anime);
+        mRecyclerView = findViewById(R.id.list_anime);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        List<Anime> animeList = ListManager.getInstance().getAnimeList();
+        AnimeRecyclerAdapter animeRecyclerAdapter = new AnimeRecyclerAdapter(this, animeList);
+        mRecyclerView.setAdapter(animeRecyclerAdapter);
     }
 
     @Override
     protected void onDestroy() {
         mDbOpenHelper.close();
         super.onDestroy();
-    }
-
-    private void displayNote() {
-
     }
 }

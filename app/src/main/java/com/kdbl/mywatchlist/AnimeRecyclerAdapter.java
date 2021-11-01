@@ -10,26 +10,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
+import java.util.List;
 
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
-    private Cursor mCursor;
+//    private Cursor mCursor;
     private final LayoutInflater mLayoutInflater;
+    private List<Anime> mAnimes;
+
     private int mAnimeTitlePos;
     private int mAnimeRatingPos;
     private int mIdPos;
 
-    public AnimeRecyclerAdapter(Context context, Cursor cursor) {
+    public AnimeRecyclerAdapter(Context context, List<Anime> animes) {
         mContext = context;
+        mAnimes = animes;
 //        used to create views
         mLayoutInflater = LayoutInflater.from(mContext);
 //        used to iterate through database
-        mCursor = cursor;
-        populateColumnPositions();
+//        mCursor = cursor;
+//        populateColumnPositions();
     }
 
-    private void populateColumnPositions() {
+    /*private void populateColumnPositions() {
         if(mCursor == null)
             return;
 //        get index from mCursor
@@ -44,7 +47,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         mCursor = cursor;
         populateColumnPositions();
         notifyDataSetChanged();
-    }
+    }*/
 
     @NonNull
     @Override
@@ -56,19 +59,24 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
+        /*mCursor.moveToPosition(position);
         String animeTitle = mCursor.getString(mAnimeTitlePos);
         String animeRating = mCursor.getString(mAnimeRatingPos);
         int id = mCursor.getInt(mIdPos);
 
         holder.mTextTitle.setText(animeTitle);
         holder.mTextRating.setText(animeRating);
-        holder.mID = id;
+        holder.mID = id;*/
+//        Associate data with view at the specific position
+        Anime anime = mAnimes.get(position);
+        holder.mTextTitle.setText(anime.getTitle());
+//        note setText only takes string. if it's int, it'll treat it as resource id
+        holder.mTextRating.setText(String.valueOf(anime.getRating()));
     }
 
     @Override
     public int getItemCount() {
-        return mCursor == null ? 0 : mCursor.getCount();
+        return mAnimes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

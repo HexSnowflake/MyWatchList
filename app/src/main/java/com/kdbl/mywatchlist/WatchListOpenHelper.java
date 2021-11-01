@@ -27,31 +27,43 @@ public class WatchListOpenHelper extends SQLiteOpenHelper {
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 6);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
 
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
+
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "eromanga sensei");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 7);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, true);
+
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
 
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "senryuu girl");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 8);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
 
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
+
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "k-on");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 7);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
 
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "gj bu");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 5);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
 
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
+
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "netoge no yome");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 8);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
 
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, "chunnibyou");
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, 9);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, false);
 
-        long rowID = sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
+        sqLiteDatabase.insert(AnimeInfoEntry.TABLE_NAME, null, values);
     }
 
     @Override
