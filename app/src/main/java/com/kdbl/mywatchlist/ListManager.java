@@ -76,9 +76,9 @@ public class ListManager
         db.insert(AnimeInfoEntry.TABLE_NAME, null, values);
 
         return getInstance().insert(animeRecyclerAdapter, new Anime(title, Integer.parseInt(rating),
-                isSketch.toLowerCase().equals("yes")
-                        || isSketch.toLowerCase().equals("y")
-                        || isSketch.toLowerCase().equals("true")));
+                isSketch.equalsIgnoreCase("yes")
+                        || isSketch.equalsIgnoreCase("y")
+                        || isSketch.equalsIgnoreCase("true")));
     }
 
     private int insert(AnimeRecyclerAdapter animeRecyclerAdapter, Anime anime) {

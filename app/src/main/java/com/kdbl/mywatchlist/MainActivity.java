@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(this);
 //        title present in custom layout, disable the default title
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        set dialog default window to be transparent
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 //        allow disable dialog by clicking outside the dialog
         dialog.setCancelable(true);
 //        associate layout with dialog
