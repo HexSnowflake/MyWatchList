@@ -4,18 +4,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
 
 import java.util.List;
 
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private WatchListOpenHelper mDbOpenHelper;
     private RecyclerView mRecyclerView;
+    private AnimeRecyclerAdapter mAnimeRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +39,16 @@ public class MainActivity extends AppCompatActivity {
         mDbOpenHelper = new WatchListOpenHelper(this);
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                onButtonShowPopupClick(v);
-            }
+        fab.setOnClickListener(v -> {
+            Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            onButtonShowDialogueClick();
         });
 
         initializeDisplayContent();
     }
+
+
 
     @Override
     protected void onDestroy() {
@@ -58,39 +64,48 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         List<Anime> animeList = ListManager.getInstance().getAnimeList();
-        AnimeRecyclerAdapter animeRecyclerAdapter = new AnimeRecyclerAdapter(this, animeList);
-        mRecyclerView.setAdapter(animeRecyclerAdapter);
+        mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, animeList);
+        mRecyclerView.setAdapter(mAnimeRecyclerAdapter);
     }
 
-    public void onButtonShowPopupClick(View view) {
-//        inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View newAnimePopup = inflater.inflate(R.layout.new_anime_popup, null);
+    public void onButtonShowDialogueClick() {
+        final Dialog dialog = new Dialog(this);
+//        title present in custom layout, disable the default title
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        allow disable dialog by clicking outside the dialog
+        dialog.setCancelable(true);
+//        associate layout with dialog
+        dialog.setContentView(R.layout.new_anime_popup);
 
-//        create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true;
-        final PopupWindow animePopup = new PopupWindow(newAnimePopup, width, height, focusable);
 
-//        show the popup window
-        animePopup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        Button saveButton = newAnimePopup.findViewById(R.id.save_button);
+        Button saveButton = dialog.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "clicked save", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ContentValues values = new ContentValues();
+                String nAnimeTitle = ((EditText)(dialog.findViewById(R.id.new_anime_title)))
+                        .getText().toString();
+                String nAnimeRating = ((EditText)(dialog.findViewById(R.id.new_anime_rating)))
+                        .getText().toString();
+                String nAnimeIsSketch = ((EditText)(dialog.findViewById(R.id.new_anime_isSketch)))
+                        .getText().toString();
+
+                if(ListManager.getInstance().contains(nAnimeTitle)) {
+                    Snackbar.make(v, "already contains this anime", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    return;
+                }
+
+                mAnimeRecyclerAdapter.notifyItemInserted(
+                        ListManager.insertInDb(mAnimeRecyclerAdapter ,mDbOpenHelper,
+                                nAnimeTitle, nAnimeRating, nAnimeIsSketch)
+                );
+
+                dialog.dismiss();
             }
         });
 
-        animePopup.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                animePopup.dismiss();
-            }
-        });
+        dialog.show();
     }
 }

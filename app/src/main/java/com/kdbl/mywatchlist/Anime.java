@@ -1,5 +1,7 @@
 package com.kdbl.mywatchlist;
 
+import java.util.Locale;
+
 public class Anime implements Comparable<Anime>{
 
     private String mTitle;
@@ -20,6 +22,7 @@ public class Anime implements Comparable<Anime>{
         mIsSketch = isSketch;
     }
 
+//    where better means greater
     @Override
     public int compareTo(Anime anime) {
         if(mRating > anime.getRating()) {
@@ -29,7 +32,7 @@ public class Anime implements Comparable<Anime>{
             return -1;
         }
 
-        if (mTitle.compareTo(anime.getTitle()) < 0) {
+        if (mTitle.toLowerCase().compareTo(anime.getTitle().toLowerCase()) < 0) {
             return 1;
         } else {
             return -1;

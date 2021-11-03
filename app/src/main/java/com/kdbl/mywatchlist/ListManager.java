@@ -1,19 +1,24 @@
 package com.kdbl.mywatchlist;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class ListManager
 {
     private static ListManager instance = null;
     private List<Anime> mAnimeList = new ArrayList<>();
+    private Set<String> mAnimeSet = new HashSet<>();
 
-//    make singleton
+    //    make singleton
     public static ListManager getInstance() {
         if(instance == null) {
             instance = new ListManager();
@@ -21,21 +26,7 @@ public class ListManager
         return instance;
     }
 
-    public List<Anime> sort(List<Anime> arr) {
-        if(arr.size() <= 1) {
-            return  arr;
-        }
-
-        List<Anime> l1 = copy(arr, 0, arr.size() / 2);
-        List<Anime> l2 = copy(arr, arr.size() / 2, arr.size());
-
-        l1 = sort(l1);
-        l2 = sort(l2);
-
-        return combine(l1, l2);
-    }
-
-//    load data from database
+    //    load data from database
     public static void loadDatabase(WatchListOpenHelper dbHelper) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] animeListColumns = {
@@ -63,9 +54,74 @@ public class ListManager
 
             Anime anime = new Anime(animeTitle, animeRating, animeIsSketch.equals("true"));
             lm.mAnimeList.add(anime);
+            lm.mAnimeSet.add(anime.getTitle());
         }
 
         cursor.close();
+    }
+
+    public boolean contains(String animeTitle) {
+        return mAnimeSet.contains(animeTitle);
+    }
+
+    public static int insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
+                                 String title, String rating, String isSketch) {
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, title);
+        values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
+        values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
+
+        db.insert(AnimeInfoEntry.TABLE_NAME, null, values);
+
+        return getInstance().insert(animeRecyclerAdapter, new Anime(title, Integer.parseInt(rating),
+                isSketch.toLowerCase().equals("yes")
+                        || isSketch.toLowerCase().equals("y")
+                        || isSketch.toLowerCase().equals("true")));
+    }
+
+    private int insert(AnimeRecyclerAdapter animeRecyclerAdapter, Anime anime) {
+        int min = 0;
+        int max = mAnimeList.size() - 1;
+        int mid = (mAnimeList.size() - 1) / 2;
+
+//        implement binary search
+        while(min < max) {
+            if(anime.compareTo(mAnimeList.get(mid)) < 0) {
+                min = mid + 1;
+            } else {
+                max = mid;
+            }
+            mid = (max - min) / 2 + min;
+        }
+
+        List<Anime> nAnimeList = new ArrayList<>();
+        for(int i = 0; i < mAnimeList.size(); i++) {
+            if(i == mid) {
+                nAnimeList.add(anime);
+            }
+            nAnimeList.add(mAnimeList.get(i));
+        }
+        mAnimeList = nAnimeList;
+        mAnimeSet.add(anime.getTitle());
+        animeRecyclerAdapter.setAnimes(nAnimeList);
+
+        return mid;
+    }
+
+    public List<Anime> sort(List<Anime> arr) {
+        if(arr.size() <= 1) {
+            return  arr;
+        }
+
+        List<Anime> l1 = copy(arr, 0, arr.size() / 2);
+        List<Anime> l2 = copy(arr, arr.size() / 2, arr.size());
+
+        l1 = sort(l1);
+        l2 = sort(l2);
+
+        return combine(l1, l2);
     }
 
     private List<Anime> combine(List<Anime> left, List<Anime> right) {

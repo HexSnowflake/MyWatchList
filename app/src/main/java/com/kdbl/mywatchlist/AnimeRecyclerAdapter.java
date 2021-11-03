@@ -14,40 +14,15 @@ import java.util.List;
 
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
-//    private Cursor mCursor;
     private final LayoutInflater mLayoutInflater;
     private List<Anime> mAnimes;
-
-    private int mAnimeTitlePos;
-    private int mAnimeRatingPos;
-    private int mIdPos;
 
     public AnimeRecyclerAdapter(Context context, List<Anime> animes) {
         mContext = context;
         mAnimes = animes;
 //        used to create views
         mLayoutInflater = LayoutInflater.from(mContext);
-//        used to iterate through database
-//        mCursor = cursor;
-//        populateColumnPositions();
     }
-
-    /*private void populateColumnPositions() {
-        if(mCursor == null)
-            return;
-//        get index from mCursor
-        mAnimeTitlePos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_TITLE);
-        mAnimeRatingPos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_RATING);
-        mIdPos = mCursor.getColumnIndex(AnimeInfoEntry._ID);
-    }
-
-    public void changeCursor(Cursor cursor) {
-        if(mCursor != null)
-            mCursor.close();
-        mCursor = cursor;
-        populateColumnPositions();
-        notifyDataSetChanged();
-    }*/
 
     @NonNull
     @Override
@@ -59,18 +34,10 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        /*mCursor.moveToPosition(position);
-        String animeTitle = mCursor.getString(mAnimeTitlePos);
-        String animeRating = mCursor.getString(mAnimeRatingPos);
-        int id = mCursor.getInt(mIdPos);
-
-        holder.mTextTitle.setText(animeTitle);
-        holder.mTextRating.setText(animeRating);
-        holder.mID = id;*/
 //        Associate data with view at the specific position
         Anime anime = mAnimes.get(position);
         holder.mTextTitle.setText(anime.getTitle());
-//        note setText only takes string. if it's int, it'll treat it as resource id
+//        Note setText only takes string. if it's int, it'll treat it as resource id
         holder.mTextRating.setText(String.valueOf(anime.getRating()));
     }
 
@@ -90,5 +57,9 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             mTextTitle = (TextView) itemView.findViewById(R.id.text_title);
             mTextRating = (TextView) itemView.findViewById(R.id.text_rating);
         }
+    }
+
+    public void setAnimes(List<Anime> animes) {
+        mAnimes = animes;
     }
 }
