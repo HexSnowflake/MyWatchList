@@ -64,6 +64,21 @@ public class ListManager
         return mAnimeSet.contains(animeTitle);
     }
 
+//    no clue if this works, but still need to work on UI first
+    public static int updateDb(WatchListOpenHelper openHelper, String title, String rating, String isSketch) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, title);
+        values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
+        values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
+
+        String selection = AnimeInfoEntry.COLUMN_ANIME_TITLE + " = ?";
+        String[] selectionArgs = new String[] {title};
+
+        return db.update(AnimeInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+    }
+
     public static int insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
                                  String title, String rating, String isSketch) {
         SQLiteDatabase db = dbOpenHelper.getReadableDatabase();

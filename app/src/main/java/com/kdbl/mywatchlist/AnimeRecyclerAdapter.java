@@ -1,10 +1,12 @@
 package com.kdbl.mywatchlist;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,12 +52,18 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 
         public final TextView mTextTitle;
         public final TextView mTextRating;
-        public int mID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mTextTitle = (TextView) itemView.findViewById(R.id.text_title);
-            mTextRating = (TextView) itemView.findViewById(R.id.text_rating);
+            mTextTitle = itemView.findViewById(R.id.text_title);
+            mTextRating = itemView.findViewById(R.id.text_rating);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity.getInstance().onButtonShowDialogueClick(MainActivity.DIALOG_UPDATE);
+                }
+            });
         }
     }
 
