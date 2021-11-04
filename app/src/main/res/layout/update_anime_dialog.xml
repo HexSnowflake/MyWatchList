@@ -30,12 +30,12 @@
                 android:layout_marginEnd="16dp"
                 android:text="Update Anime"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintEnd_toStartOf="@+id/cancel_button"
+                app:layout_constraintEnd_toStartOf="@+id/delete_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/new_anime_title"
+                android:id="@+id/update_anime_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/update_anime_text" />
 
             <EditText
-                android:id="@+id/new_anime_rating"
+                android:id="@+id/update_anime_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -56,10 +56,10 @@
                 android:hint="Anime rating"
                 android:inputType="textPersonName"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_anime_title" />
+                app:layout_constraintTop_toBottomOf="@+id/update_anime_title" />
 
             <EditText
-                android:id="@+id/new_anime_isSketch"
+                android:id="@+id/update_anime_isSketch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -69,7 +69,7 @@
                 android:inputType="textPersonName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_anime_rating" />
+                app:layout_constraintTop_toBottomOf="@+id/update_anime_rating" />
 
             <Button
                 android:id="@+id/save_button"
@@ -81,14 +81,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/new_anime_isSketch" />
+                app:layout_constraintTop_toBottomOf="@+id/update_anime_isSketch" />
 
             <Button
-                android:id="@+id/cancel_button"
+                android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="CANCEL"
+                android:text="DELETE"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintBottom_toBottomOf="@+id/update_anime_text"
                 app:layout_constraintEnd_toEndOf="parent"

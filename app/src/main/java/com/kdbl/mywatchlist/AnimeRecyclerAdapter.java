@@ -2,11 +2,10 @@ package com.kdbl.mywatchlist;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +16,13 @@ import java.util.List;
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
+    private final WatchListOpenHelper mDbOpenHelper;
     private List<Anime> mAnimes;
 
-    public AnimeRecyclerAdapter(Context context, List<Anime> animes) {
+    public AnimeRecyclerAdapter(Context context, WatchListOpenHelper openHelper, List<Anime> animes) {
         mContext = context;
         mAnimes = animes;
+        mDbOpenHelper = openHelper;
 //        used to create views
         mLayoutInflater = LayoutInflater.from(mContext);
     }
@@ -58,10 +59,23 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             mTextTitle = itemView.findViewById(R.id.text_title);
             mTextRating = itemView.findViewById(R.id.text_rating);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity.getInstance().onButtonShowDialogueClick(MainActivity.DIALOG_UPDATE);
+                    DialogHelper dialogHelper = new DialogHelper(mContext);
+                    Dialog dialog = dialogHelper.generateDialog(R.layout.update_anime_dialog);
+                    EditText title = dialog.findViewById(R.id.update_anime_title);
+                    EditText rating = dialog.findViewById(R.id.update_anime_rating);
+                    EditText isSketch = dialog.findViewById(R.id.update_anime_isSketch);
+
+                    title.setText(mTextTitle.getText().toString());
+                    rating.setText(mTextRating.getText().toString());
+
+                    dialogHelper.addButton(AnimeRecyclerAdapter.this, mDbOpenHelper,
+                            dialog, mTextTitle.getText().toString(), false);
+                    dialogHelper.addButton(AnimeRecyclerAdapter.this, mDbOpenHelper,
+                            dialog, mTextTitle.getText().toString(), true);
                 }
             });
         }
