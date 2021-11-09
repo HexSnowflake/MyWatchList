@@ -82,6 +82,8 @@ public class ListManager
         return mAnimeMap.containsKey(animeTitle);
     }
 
+    public int getAnimeIndex(String animeTitle) {return mAnimeMap.get(animeTitle);}
+
 //    no clue if this works, but still need to work on UI first
     public static int updateDb(WatchListOpenHelper openHelper, String originalTitle,
                                String title, String rating, String isSketch) {
