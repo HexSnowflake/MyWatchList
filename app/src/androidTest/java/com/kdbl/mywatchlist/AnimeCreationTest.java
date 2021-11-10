@@ -2,10 +2,13 @@ package com.kdbl.mywatchlist;
 
 import static org.junit.Assert.*;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,6 +18,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.*;
 import static androidx.test.espresso.action.ViewActions.*;
+import static androidx.test.espresso.contrib.RecyclerViewActions.*;
 import static androidx.test.espresso.matcher.ViewMatchers.*;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static org.hamcrest.Matchers.*;
@@ -48,7 +52,24 @@ public class AnimeCreationTest {
         final Anime anime = sListManager.getAnimeList().
                 get(sListManager.getAnimeIndex("senryuu girl"));
 
-        onData(allOf(instanceOf(Anime.class), equalTo(anime))).perform(click());
+        onView(withId(R.id.list_anime)).perform(actionOnHolderItem(withTitle("senryuu girl"), click()));
+//        onData(allOf(instanceOf(Anime.class), equalTo(anime))).perform(click());
         pressBack();
+    }
+
+//    matches ViewHolder based on title
+    private static Matcher<RecyclerView.ViewHolder> withTitle(final String title) {
+        return new BoundedMatcher<RecyclerView.ViewHolder, AnimeRecyclerAdapter.ViewHolder>(AnimeRecyclerAdapter.ViewHolder.class) {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("view holder with title: " + title);
+            }
+
+            @Override
+            protected boolean matchesSafely(AnimeRecyclerAdapter.ViewHolder item) {
+                return item.mTextTitle.getText().toString().equalsIgnoreCase(title);
+            }
+        };
     }
 }
