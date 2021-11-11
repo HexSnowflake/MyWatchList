@@ -20,6 +20,8 @@ public class ListManager
     private List<Anime> mAnimeList = new ArrayList<>();
     private Map<String, Integer> mAnimeMap = new HashMap<>();
 
+    protected static WatchListOpenHelper mDbHelper = null;
+
     //    make singleton
     public static ListManager getInstance() {
         if(instance == null) {
@@ -30,6 +32,7 @@ public class ListManager
 
     //    load data from database
     public static void loadDatabase(WatchListOpenHelper dbHelper) {
+        mDbHelper = dbHelper;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] animeListColumns = {
                 AnimeInfoEntry.COLUMN_ANIME_TITLE,
@@ -63,6 +66,7 @@ public class ListManager
     }
 
     public static int deleteFromDb(WatchListOpenHelper openHelper, String originalTitle) {
+        mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
         ListManager lm = getInstance();
@@ -87,6 +91,7 @@ public class ListManager
 //    no clue if this works, but still need to work on UI first
     public static int updateDb(WatchListOpenHelper openHelper, String originalTitle,
                                String title, String rating, String isSketch) {
+        mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -114,6 +119,7 @@ public class ListManager
 
     public static int insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
                                  String title, String rating, String isSketch) {
+        mDbHelper = dbOpenHelper;
         SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
 
         ContentValues values = new ContentValues();
@@ -216,5 +222,9 @@ public class ListManager
 
     public List<Anime> getAnimeList() {
         return mAnimeList;
+    }
+
+    public static WatchListOpenHelper getDbHelper() {
+        return mDbHelper;
     }
 }

@@ -10,6 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -24,8 +25,11 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static org.hamcrest.Matchers.*;
 import static androidx.test.espresso.Espresso.pressBack;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 @RunWith(AndroidJUnit4.class)
-public class AnimeCreationTest {
+public class BlankListTest {
     static ListManager sListManager;
 
     @BeforeClass
@@ -37,6 +41,18 @@ public class AnimeCreationTest {
     public ActivityTestRule<MainActivity> mMainActivityActivityTestRule =
             new ActivityTestRule<>(MainActivity.class);
 
+    @Before
+    public void clearDbB() {
+        SQLiteDatabase db = ListManager.mDbHelper.getWritableDatabase();
+        db.execSQL("delete from " + AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME);
+    }
+
+    @After
+    public void clearDbA() {
+        SQLiteDatabase db = ListManager.mDbHelper.getWritableDatabase();
+        db.execSQL("delete from " + AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME);
+    }
+
     @Test
     public void createNewAnime() {
         onView(withId(R.id.floatingActionButton)).perform(click());
@@ -45,31 +61,5 @@ public class AnimeCreationTest {
         onView(withId(R.id.update_anime_isSketch)).perform(typeText("y"),
                 closeSoftKeyboard());
         onView(withId(R.id.save_button)).perform(click());
-    }
-
-    @Test
-    public void selectAnime() {
-        final Anime anime = sListManager.getAnimeList().
-                get(sListManager.getAnimeIndex("senryuu girl"));
-
-        onView(withId(R.id.list_anime)).perform(actionOnHolderItem(withTitle("senryuu girl"), click()));
-//        onData(allOf(instanceOf(Anime.class), equalTo(anime))).perform(click());
-        pressBack();
-    }
-
-//    matches ViewHolder based on title
-    private static Matcher<RecyclerView.ViewHolder> withTitle(final String title) {
-        return new BoundedMatcher<RecyclerView.ViewHolder, AnimeRecyclerAdapter.ViewHolder>(AnimeRecyclerAdapter.ViewHolder.class) {
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("view holder with title: " + title);
-            }
-
-            @Override
-            protected boolean matchesSafely(AnimeRecyclerAdapter.ViewHolder item) {
-                return item.mTextTitle.getText().toString().equalsIgnoreCase(title);
-            }
-        };
     }
 }
