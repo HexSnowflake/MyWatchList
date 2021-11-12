@@ -44,14 +44,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
-        ListManager.loadDatabase(mDbOpenHelper);
-
         mRecyclerView = findViewById(R.id.list_anime);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        List<Anime> animeList = ListManager.getInstance().getAnimeList();
-        mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, mDbOpenHelper, animeList);
+        mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, mDbOpenHelper, null);
         mRecyclerView.setAdapter(mAnimeRecyclerAdapter);
     }
 }
