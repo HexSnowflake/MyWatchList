@@ -21,6 +21,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
     private final WatchListOpenHelper mDbOpenHelper;
+
     private Cursor mCursor;
     private int mColTitlePos;
     private int mColRatingPos;
@@ -42,8 +43,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
 //        get col index from cursor
         mColTitlePos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_TITLE);
         mColRatingPos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_RATING);
-        mColIsSketchPos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_IS_SKETCH);
-        mColIDPos = mCursor.getColumnIndex(AnimeInfoEntry._ID);
+        mColIsSketchPos = mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH);
+        mColIDPos = mCursor.getColumnIndexOrThrow(AnimeInfoEntry._ID);
     }
 
     public void changeCursor(Cursor cursor) {
@@ -58,7 +59,9 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         SQLiteDatabase db = openHelper.getReadableDatabase();
         String[] animeListColumns = {
                 AnimeInfoEntry.COLUMN_ANIME_TITLE,
-                AnimeInfoEntry.COLUMN_ANIME_RATING};
+                AnimeInfoEntry.COLUMN_ANIME_RATING,
+                AnimeInfoEntry.COLUMN_IS_SKETCH,
+                AnimeInfoEntry._ID};
         String orderBy = AnimeInfoEntry.COLUMN_ANIME_RATING + " DESC"
                 + "," + AnimeInfoEntry.COLUMN_ANIME_TITLE;
         final Cursor animeCursor = db.query(AnimeInfoEntry.TABLE_NAME, animeListColumns,
@@ -106,7 +109,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogHelper dialogHelper = new DialogHelper(mContext);
+                    DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this, mDbOpenHelper);
                     Dialog dialog = dialogHelper.generateDialog(R.layout.update_anime_dialog);
                     EditText title = dialog.findViewById(R.id.update_anime_title);
                     EditText rating = dialog.findViewById(R.id.update_anime_rating);
@@ -115,16 +118,15 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     title.setText(mTextTitle.getText().toString());
                     rating.setText(mTextRating.getText().toString());
 
-                    dialogHelper.addButton(AnimeRecyclerAdapter.this, mDbOpenHelper,
-                            dialog, mTextTitle.getText().toString(), false);
-                    dialogHelper.addButton(AnimeRecyclerAdapter.this, mDbOpenHelper,
-                            dialog, mTextTitle.getText().toString(), true);
+                    mCursor.moveToPosition(mId);
+                    dialogHelper.addButton(mCursor, false);
+                    dialogHelper.addButton(mCursor, true);
                 }
             });
         }
     }
 
-//    public void setAnimes(List<Anime> animes) {
-//        mAnimes = animes;
-//    }
+    public Cursor getCursor() {
+        return mCursor;
+    }
 }

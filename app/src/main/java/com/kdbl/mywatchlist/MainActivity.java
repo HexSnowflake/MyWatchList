@@ -29,9 +29,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            DialogHelper dialogHelper = new DialogHelper(this);
-            dialogHelper.addButton(mAnimeRecyclerAdapter, mDbOpenHelper,
-                    dialogHelper.generateDialog(R.layout.new_anime_dialog), null, false);
+            DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter, mDbOpenHelper);
+            dialogHelper.addButton(null, false);
         });
 
         initializeDisplayContent();
@@ -41,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         mDbOpenHelper.close();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+        super.onResume();
     }
 
     private void initializeDisplayContent() {
