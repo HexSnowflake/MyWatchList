@@ -78,6 +78,9 @@ public class DialogHelper {
         });
     }
 
+
+//    TODO: A new cursor probably needs to be returned since the old cursor given will become outdated
+//    performance for that may still be an issue
     private void deleteAnime(AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper, Cursor cursor) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.deleteFromDb(openHelper, originalTitle);

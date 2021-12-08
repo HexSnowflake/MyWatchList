@@ -20,6 +20,49 @@ public class WatchListOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(AnimeInfoEntry.SQL_CREATE_TABLE);
+
+        ContentValues values = new ContentValues();
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "re:zero");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 6);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "eromanga sensei");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 7);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, true);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "senryuu girl");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 8);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "k-on");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 7);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "gj bu");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 5);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "netoge no yome");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 8);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, "chunnibyou");
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, 9);
+        values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, false);
+
+        sqLiteDatabase.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
     }
 
     @Override

@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
 
-import java.util.List;
-
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
@@ -47,12 +45,17 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         mColIDPos = mCursor.getColumnIndexOrThrow(AnimeInfoEntry._ID);
     }
 
-    public void changeCursor(Cursor cursor) {
-        if(mCursor != null)
-            mCursor.close();
-        mCursor = cursor;
+    public void changeCursorAndUpdateData(Cursor cursor) {
+        changeCursor(cursor);
         populateColumnPos();
         notifyDataSetChanged();
+    }
+
+    public void changeCursor(Cursor cursor) {
+        if(mCursor != null) {
+            mCursor.close();
+        }
+        mCursor = cursor;
     }
 
     public void notifyDatabaseChanged(WatchListOpenHelper openHelper) {
@@ -66,7 +69,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 + "," + AnimeInfoEntry.COLUMN_ANIME_TITLE;
         final Cursor animeCursor = db.query(AnimeInfoEntry.TABLE_NAME, animeListColumns,
                 null, null, null, null, orderBy);
-        changeCursor(animeCursor);
+        changeCursorAndUpdateData(animeCursor);
     }
 
     @NonNull
@@ -118,7 +121,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     title.setText(mTextTitle.getText().toString());
                     rating.setText(mTextRating.getText().toString());
 
-                    mCursor.moveToPosition(mId);
+                    mCursor.moveToPosition(ViewHolder.this.getAdapterPosition());
                     dialogHelper.addButton(mCursor, false);
                     dialogHelper.addButton(mCursor, true);
                 }
