@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter, mDbOpenHelper);
+            DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter,
+                    mDbOpenHelper, -1);
             dialogHelper.addButton(null, false);
         });
 

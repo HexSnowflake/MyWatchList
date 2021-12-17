@@ -18,7 +18,9 @@ public class ListManager
 {
     private static ListManager instance = null;
 //    private List<Anime> mAnimeList = new ArrayList<>();
-    private Map<String, Integer> mAnimeMap = new HashMap<>();
+//    private Map<String, Integer> mAnimeMap = new HashMap<>();
+//    TODO: The set still needs to be updated when things are changed
+    private Set<String> mAnimeSet = new HashSet<>();
 
     protected static WatchListOpenHelper mDbHelper = null;
 
@@ -30,28 +32,26 @@ public class ListManager
         return instance;
     }
 
-    public static int deleteFromDb(WatchListOpenHelper openHelper, String originalTitle) {
+    public static void deleteFromDb(WatchListOpenHelper openHelper, String originalTitle) {
         mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
         ListManager lm = getInstance();
-        int index = lm.mAnimeMap.get(originalTitle);
-        lm.mAnimeMap.remove(originalTitle);
+//        int index = lm.mAnimeMap.get(originalTitle);
+//        lm.mAnimeMap.remove(originalTitle);
 
         String selection = AnimeInfoEntry.COLUMN_ANIME_TITLE + " = ?";
         String[] selectionArgs = new String[] {originalTitle};
 
         db.delete(AnimeInfoEntry.TABLE_NAME, selection, selectionArgs);
-
-        return index;
     }
 
     public boolean contains(String animeTitle) {
-        return mAnimeMap.containsKey(animeTitle);
+        return mAnimeSet.contains(animeTitle);
     }
 
 //    no clue if this works, but still need to work on UI first
-    public static int updateDb(WatchListOpenHelper openHelper, String originalTitle,
+    public static void updateDb(WatchListOpenHelper openHelper, String originalTitle,
                                String title, String rating, String isSketch) {
         mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
@@ -62,9 +62,9 @@ public class ListManager
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
 
         ListManager lm = ListManager.getInstance();
-        int index = lm.mAnimeMap.get(originalTitle);
-        lm.mAnimeMap.remove(originalTitle);
-        lm.mAnimeMap.put(title, index);
+//        int index = lm.mAnimeMap.get(originalTitle);
+//        lm.mAnimeMap.remove(originalTitle);
+//        lm.mAnimeMap.put(title, index);
 
         String selection = AnimeInfoEntry.COLUMN_ANIME_TITLE + " = ?";
         String[] selectionArgs = new String[] {originalTitle};
@@ -72,7 +72,7 @@ public class ListManager
         db.update(AnimeInfoEntry.TABLE_NAME, values, selection, selectionArgs);
 
 //        need to return index
-        return lm.mAnimeMap.get(title);
+//        return lm.mAnimeMap.get(title);
     }
 
     public static int insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
@@ -85,7 +85,7 @@ public class ListManager
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
 
-        return (int) db.insert(AnimeInfoEntry.TABLE_NAME, null, values) - 1;
+        return (int) db.insertOrThrow(AnimeInfoEntry.TABLE_NAME, null, values) - 1;
     }
 
     public List<Anime> sort(List<Anime> arr) {

@@ -19,13 +19,16 @@ public class DialogHelper {
     private final Context mContext;
     private AnimeRecyclerAdapter mAnimeRecyclerAdapter;
     private WatchListOpenHelper mWatchListOpenHelper;
+    private int mPosition;
 
-    public DialogHelper(Context context, AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper) {
+    public DialogHelper(Context context, AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper, int position) {
         mContext = context;
         mAnimeRecyclerAdapter = adapter;
         mWatchListOpenHelper = openHelper;
+        mPosition = position;
     }
 
+//    TODO: Class design is atrocious, add button should probably be internal method
     public Dialog generateDialog(@LayoutRes int layoutRid) {
         final Dialog dialog = new Dialog(mContext);
 //        title present in custom layout, disable the default title
@@ -56,6 +59,9 @@ public class DialogHelper {
             button = dialog.findViewById(R.id.save_button);
         }
 
+        /**
+         * If position is -1, it means the button is for an addition
+         */
         button.setOnClickListener(v -> {
             String nAnimeTitle = ((EditText)(dialog.findViewById(R.id.update_anime_title)))
                     .getText().toString();
@@ -84,14 +90,14 @@ public class DialogHelper {
     private void deleteAnime(AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper, Cursor cursor) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.deleteFromDb(openHelper, originalTitle);
-        adapter.notifyItemRemoved(cursor.getColumnIndexOrThrow(_ID));
+        adapter.notifyItemRemoved(mPosition);
     }
 
     private void updateAnime(AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper,
                              Cursor cursor, String title, String rating, String isSketch) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.updateDb(openHelper, originalTitle, title, rating, isSketch);
-        adapter.notifyItemChanged(cursor.getColumnIndexOrThrow(_ID));
+        adapter.notifyItemChanged(mPosition);
     }
 
     private boolean insertNewAnime(View v, AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper,

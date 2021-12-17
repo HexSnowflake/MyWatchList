@@ -112,7 +112,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this, mDbOpenHelper);
+                    DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
+                            mDbOpenHelper, ViewHolder.this.getBindingAdapterPosition());
                     Dialog dialog = dialogHelper.generateDialog(R.layout.update_anime_dialog);
                     EditText title = dialog.findViewById(R.id.update_anime_title);
                     EditText rating = dialog.findViewById(R.id.update_anime_rating);
@@ -121,7 +122,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                     title.setText(mTextTitle.getText().toString());
                     rating.setText(mTextRating.getText().toString());
 
-                    mCursor.moveToPosition(ViewHolder.this.getAdapterPosition());
+                    mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
                     dialogHelper.addButton(mCursor, false);
                     dialogHelper.addButton(mCursor, true);
                 }
