@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
 
+import java.util.Map;
+
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
