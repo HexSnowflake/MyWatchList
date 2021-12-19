@@ -129,8 +129,4 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             });
         }
     }
-
-    public Cursor getCursor() {
-        return mCursor;
-    }
 }
