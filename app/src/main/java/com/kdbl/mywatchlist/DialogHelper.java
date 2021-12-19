@@ -28,8 +28,8 @@ public class DialogHelper {
         mPosition = position;
     }
 
-//    TODO: Class design is atrocious, add button should probably be internal method
-    public Dialog generateDialog(@LayoutRes int layoutRid) {
+    //    TODO: why's the last element getting duplicated
+    public void generateDialog(@LayoutRes int layoutRid, Cursor cursor) {
         final Dialog dialog = new Dialog(mContext);
 //        title present in custom layout, disable the default title
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -40,19 +40,22 @@ public class DialogHelper {
 //        associate layout with dialog
         dialog.setContentView(layoutRid);
 
-        dialog.show();
+        if(cursor != null) {
+            ((EditText) dialog.findViewById(R.id.update_anime_title))
+                    .setText(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE)));
+            ((EditText) dialog.findViewById(R.id.update_anime_rating))
+                    .setText(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_RATING)));
+            ((EditText) dialog.findViewById(R.id.update_anime_isSketch))
+                    .setText(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_SKETCH)) == 0? "no" : "yes");
+            addButton(dialog, cursor, true);
+        }
+        addButton(dialog, cursor, false);
 
-        return dialog;
+        dialog.show();
     }
 
-    public void addButton(Cursor cursor, boolean isDelete) {
-        Dialog dialog;
+    private void addButton(Dialog dialog, Cursor cursor, boolean isDelete) {
         Button button;
-        if(cursor == null) {
-            dialog = generateDialog(R.layout.new_anime_dialog);
-        } else {
-            dialog = generateDialog(R.layout.update_anime_dialog);
-        }
         if(isDelete) {
             button = dialog.findViewById(R.id.delete_button);
         } else {
@@ -71,7 +74,9 @@ public class DialogHelper {
                     .getText().toString();
 
             if(isDelete) {
+                mAnimeRecyclerAdapter.getItemCount();
                 deleteAnime(mAnimeRecyclerAdapter, mWatchListOpenHelper, cursor);
+                mAnimeRecyclerAdapter.getItemCount();
             }
             else if(cursor == null)
                 insertNewAnime(v, mAnimeRecyclerAdapter, mWatchListOpenHelper, nAnimeTitle, nAnimeRating, nAnimeIsSketch);
@@ -85,8 +90,7 @@ public class DialogHelper {
     }
 
 
-//    TODO: A new cursor probably needs to be returned since the old cursor given will become outdated
-//    performance for that may still be an issue
+    //    performance for that may still be an issue
     private void deleteAnime(AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper, Cursor cursor) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.deleteFromDb(openHelper, originalTitle);

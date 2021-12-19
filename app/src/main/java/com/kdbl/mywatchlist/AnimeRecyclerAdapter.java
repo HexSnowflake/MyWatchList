@@ -119,17 +119,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 public void onClick(View v) {
                     DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
                             mDbOpenHelper, ViewHolder.this.getBindingAdapterPosition());
-                    Dialog dialog = dialogHelper.generateDialog(R.layout.update_anime_dialog);
-                    EditText title = dialog.findViewById(R.id.update_anime_title);
-                    EditText rating = dialog.findViewById(R.id.update_anime_rating);
-                    EditText isSketch = dialog.findViewById(R.id.update_anime_isSketch);
-
-                    title.setText(mTextTitle.getText().toString());
-                    rating.setText(mTextRating.getText().toString());
-
+                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);
                     mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
-                    dialogHelper.addButton(mCursor, false);
-                    dialogHelper.addButton(mCursor, true);
                 }
             });
         }

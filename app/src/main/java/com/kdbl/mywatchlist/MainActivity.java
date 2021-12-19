@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     .setAction("Action", null).show();
             DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter,
                     mDbOpenHelper, -1);
-            dialogHelper.addButton(null, false);
+            dialogHelper.generateDialog(R.layout.new_anime_dialog, null);
         });
 
         initializeDisplayContent();
