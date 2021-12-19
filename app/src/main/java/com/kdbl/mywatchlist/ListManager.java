@@ -68,9 +68,6 @@ public class ListManager
         String[] selectionArgs = new String[] {originalTitle};
 
         db.update(AnimeInfoEntry.TABLE_NAME, values, selection, selectionArgs);
-
-//        need to return index
-//        return lm.mAnimeMap.get(title);
     }
 
     public static void insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
