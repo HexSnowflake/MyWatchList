@@ -119,8 +119,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 public void onClick(View v) {
                     DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
                             mDbOpenHelper, ViewHolder.this.getBindingAdapterPosition());
-                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);
                     mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
+                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);
                 }
             });
         }

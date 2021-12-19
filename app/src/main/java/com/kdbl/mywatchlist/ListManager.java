@@ -50,7 +50,6 @@ public class ListManager
         return mSet.contains(animeTitle);
     }
 
-//    no clue if this works, but still need to work on UI first
     public static void updateDb(WatchListOpenHelper openHelper, String originalTitle,
                                String title, String rating, String isSketch) {
         mDbHelper = openHelper;

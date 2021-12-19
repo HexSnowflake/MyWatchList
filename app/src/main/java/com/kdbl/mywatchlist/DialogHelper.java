@@ -102,8 +102,7 @@ public class DialogHelper {
                              Cursor cursor, String title, String rating, String isSketch) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.updateDb(openHelper, originalTitle, title, rating, isSketch);
-        adapter.changeCursor(adapter.getCursor(openHelper));
-        adapter.notifyItemChanged(mPosition);
+        adapter.notifyDatabaseChanged(openHelper);
     }
 
     private boolean insertNewAnime(View v, AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper,
