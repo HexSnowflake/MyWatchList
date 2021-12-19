@@ -7,12 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
 
 public class ListManager
 {
@@ -20,8 +21,9 @@ public class ListManager
 //    private List<Anime> mAnimeList = new ArrayList<>();
 //    private Map<String, Integer> mAnimeMap = new HashMap<>();
 //    TODO: The set still needs to be updated when things are changed
-    private Set<String> mAnimeSet = new HashSet<>();
+//    TODO: have to change cursor because adapter gets its info from cursor
 
+    private static Set<String> mSet = new HashSet<>();
     protected static WatchListOpenHelper mDbHelper = null;
 
     //    make singleton
@@ -36,9 +38,7 @@ public class ListManager
         mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
-        ListManager lm = getInstance();
-//        int index = lm.mAnimeMap.get(originalTitle);
-//        lm.mAnimeMap.remove(originalTitle);
+        mSet.remove(originalTitle);
 
         String selection = AnimeInfoEntry.COLUMN_ANIME_TITLE + " = ?";
         String[] selectionArgs = new String[] {originalTitle};
@@ -47,7 +47,7 @@ public class ListManager
     }
 
     public boolean contains(String animeTitle) {
-        return mAnimeSet.contains(animeTitle);
+        return mSet.contains(animeTitle);
     }
 
 //    no clue if this works, but still need to work on UI first
@@ -61,10 +61,8 @@ public class ListManager
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
 
-        ListManager lm = ListManager.getInstance();
-//        int index = lm.mAnimeMap.get(originalTitle);
-//        lm.mAnimeMap.remove(originalTitle);
-//        lm.mAnimeMap.put(title, index);
+        instance.mSet.remove(originalTitle);
+        instance.mSet.add(title);
 
         String selection = AnimeInfoEntry.COLUMN_ANIME_TITLE + " = ?";
         String[] selectionArgs = new String[] {originalTitle};
@@ -75,16 +73,18 @@ public class ListManager
 //        return lm.mAnimeMap.get(title);
     }
 
-    public static int insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
+    public static void insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
                                  String title, String rating, String isSketch) {
         mDbHelper = dbOpenHelper;
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        instance.mSet.add(title);
 
         ContentValues values = new ContentValues();
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, title);
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
 
-        return (int) db.insertOrThrow(AnimeInfoEntry.TABLE_NAME, null, values) - 1;
+        db.insert(AnimeInfoEntry.TABLE_NAME, null, values);
     }
 }

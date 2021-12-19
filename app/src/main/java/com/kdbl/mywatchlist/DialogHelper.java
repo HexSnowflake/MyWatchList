@@ -90,6 +90,7 @@ public class DialogHelper {
     private void deleteAnime(AnimeRecyclerAdapter adapter, WatchListOpenHelper openHelper, Cursor cursor) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.deleteFromDb(openHelper, originalTitle);
+        adapter.changeCursor(adapter.getCursor(openHelper));
         adapter.notifyItemRemoved(mPosition);
     }
 
@@ -97,6 +98,7 @@ public class DialogHelper {
                              Cursor cursor, String title, String rating, String isSketch) {
         String originalTitle = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANIME_TITLE));
         ListManager.updateDb(openHelper, originalTitle, title, rating, isSketch);
+        adapter.changeCursor(adapter.getCursor(openHelper));
         adapter.notifyItemChanged(mPosition);
     }
 
@@ -105,13 +107,11 @@ public class DialogHelper {
         if(ListManager.getInstance().contains(nAnimeTitle)) {
             Snackbar.make(v, "already contains this anime", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            return true;
+            return false;
         }
 
-        adapter.notifyItemInserted(
-                ListManager.insertInDb(adapter , openHelper,
-                        nAnimeTitle, nAnimeRating, nAnimeIsSketch)
-        );
-        return false;
+        ListManager.insertInDb(adapter , openHelper, nAnimeTitle, nAnimeRating, nAnimeIsSketch);
+        adapter.notifyDatabaseChanged(openHelper);
+        return true;
     }
 }

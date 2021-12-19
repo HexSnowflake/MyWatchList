@@ -61,6 +61,10 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     }
 
     public void notifyDatabaseChanged(WatchListOpenHelper openHelper) {
+        changeCursorAndUpdateData(getCursor(openHelper));
+    }
+
+    public Cursor getCursor(WatchListOpenHelper openHelper) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
         String[] animeListColumns = {
                 AnimeInfoEntry.COLUMN_ANIME_TITLE,
@@ -69,9 +73,8 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 AnimeInfoEntry._ID};
         String orderBy = AnimeInfoEntry.COLUMN_ANIME_RATING + " DESC"
                 + "," + AnimeInfoEntry.COLUMN_ANIME_TITLE;
-        final Cursor animeCursor = db.query(AnimeInfoEntry.TABLE_NAME, animeListColumns,
+        return db.query(AnimeInfoEntry.TABLE_NAME, animeListColumns,
                 null, null, null, null, orderBy);
-        changeCursorAndUpdateData(animeCursor);
     }
 
     @NonNull
