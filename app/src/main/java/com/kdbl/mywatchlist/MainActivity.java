@@ -29,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+            /*
             DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter,
                     mDbOpenHelper, -1);
-            dialogHelper.generateDialog(R.layout.new_anime_dialog, null);
+            dialogHelper.generateDialog(R.layout.new_anime_dialog, null);*/
+            NewAnimeQueryDialogFragment dialogFragment = new NewAnimeQueryDialogFragment();
+            dialogFragment.show(getSupportFragmentManager(), "newAnime");
         });
 
         initializeDisplayContent();
