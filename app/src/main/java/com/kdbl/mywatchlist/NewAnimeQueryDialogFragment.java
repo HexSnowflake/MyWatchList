@@ -17,7 +17,14 @@ public class NewAnimeQueryDialogFragment extends DialogFragment {
         builder.setTitle("New Anime").setItems(new String[]{"URL", "Manual input"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                TODO: Direct user to the right dialog
+                switch (which) {
+                    case 0 :
+                        DialogFragment dialogFragment = new UrlInputDialogFragment();
+                        dialogFragment.show(getParentFragmentManager(), "URLInput");
+                        break;
+                    default:
+                        break;
+                }
             }
         });
         return builder.create();
