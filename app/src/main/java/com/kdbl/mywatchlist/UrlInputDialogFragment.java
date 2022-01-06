@@ -21,7 +21,8 @@ public class UrlInputDialogFragment extends DialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                          TODO: implement save feature
+                        URLDisplayDialogFragment dialogFragment = new URLDisplayDialogFragment();
+                        dialogFragment.show(getParentFragmentManager(), "displayURLContent");
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
