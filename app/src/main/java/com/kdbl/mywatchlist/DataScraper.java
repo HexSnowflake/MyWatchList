@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DataScraper implements Executor {
 
@@ -74,10 +76,12 @@ public class DataScraper implements Executor {
                     Document document = Jsoup.connect(mURL).get();
                     Element animeImageName = document.selectFirst("h1.title-name.h1_bold_none");
                     Element imageURL = document.selectFirst("img[alt*=" + animeImageName.text() + "]");
-                    InputStream inputStream = (InputStream) new URL(imageURL.absUrl("data-src")).getContent();
+//                    InputStream inputStream = (InputStream) new URL(imageURL.absUrl("data-src")).getContent();
+                    InputStream tester = (InputStream) new URL("https://d2y6mqrpjbqoe6.cloudfront.net/image/upload/f_auto,q_auto/cdn1/press/zoom-yuki-kiajura/kv_sao.jpg").getContent();
+                    final Drawable coverDrawable = Drawable.createFromStream(tester, animeImageName.text());
                     urlDisplayView.findViewById(R.id.coverImageView).post(() ->
                             ((ImageView) urlDisplayView.findViewById(R.id.coverImageView))
-                                    .setImageDrawable(Drawable.createFromStream(inputStream, animeImageName.text())));
+                                    .setImageDrawable(coverDrawable));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     Log.w("populateCoverImage", exception.toString());
@@ -87,18 +91,8 @@ public class DataScraper implements Executor {
         });
     }
 
-    /**
-     * Executes the given command at some time in the future.  The command
-     * may execute in a new thread, in a pooled thread, or in the calling
-     * thread, at the discretion of the {@code Executor} implementation.
-     *
-     * @param command the runnable task
-     * @throws RejectedExecutionException if this task cannot be
-     *                                    accepted for execution
-     * @throws NullPointerException       if command is null
-     */
     @Override
     public void execute(Runnable command) {
-        command.run();
+        new Thread(command).start();
     }
 }
