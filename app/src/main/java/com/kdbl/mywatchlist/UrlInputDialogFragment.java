@@ -25,14 +25,10 @@ public class UrlInputDialogFragment extends DialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String URL = ((EditText) inputDialogView.findViewById(R.id.editTextURL)).getText().toString();
-//                        The line below is for testing purposes
-                        URL = "https://myanimelist.net/anime/11757/Sword_Art_Online";
-                        Bundle URLResult = new Bundle();
-                        URLResult.putString("URL", URL);
-                        URLDisplayDialogFragment dialogFragment = new URLDisplayDialogFragment();
-                        dialogFragment.setArguments(URLResult);
-                        dialogFragment.show(getParentFragmentManager(), "displayURLContent");
+                        String url = ((EditText) inputDialogView.findViewById(R.id.editTextURL)).getText().toString();
+                        Bundle urlResult = new Bundle();
+                        urlResult.putString("url", url);
+                        getParentFragmentManager().setFragmentResult("urlToDisplay", urlResult);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

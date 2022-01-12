@@ -1,6 +1,8 @@
 package com.kdbl.mywatchlist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +37,19 @@ public class MainActivity extends AppCompatActivity {
             dialogHelper.generateDialog(R.layout.new_anime_dialog, null);*/
             NewAnimeQueryDialogFragment dialogFragment = new NewAnimeQueryDialogFragment();
             dialogFragment.show(getSupportFragmentManager(), "newAnime");
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("urlToDisplay", this, (requestKey, result) -> {
+            String[] urlDisplayInfo = new String[3];
+            String url = result.getString("url");
+            urlDisplayInfo[0] = url;
+            urlDisplayInfo[1] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().width());
+            urlDisplayInfo[2] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().height());
+            Bundle bundle = new Bundle();
+            bundle.putCharSequenceArray("urlDisplayInfo", urlDisplayInfo);
+            URLDisplayDialogFragment displayDialogFragment = new URLDisplayDialogFragment();
+            displayDialogFragment.setArguments(bundle);
+            displayDialogFragment.show(getSupportFragmentManager(), "displayUrlFragment");
         });
 
         initializeDisplayContent();

@@ -71,6 +71,10 @@ public class DataScraper implements Executor {
     }
 
     public void populateCoverImage(View urlDisplayView) {
+        populateCoverImage(urlDisplayView, 0, 0);
+    }
+
+    public void populateCoverImage(View urlDisplayView, int screenWidth, int screenHeight) {
         this.execute(new Runnable() {
             @Override
             public void run() {
@@ -79,13 +83,10 @@ public class DataScraper implements Executor {
                     Element animeImageName = document.selectFirst("h1.title-name.h1_bold_none");
                     Element imageURL = document.selectFirst("img[alt*=" + animeImageName.text() + "]");
                     InputStream inputStream = (InputStream) new URL(imageURL.absUrl("data-src")).getContent();
-//                    InputStream tester = (InputStream) new URL("https://d2y6mqrpjbqoe6.cloudfront.net/image/upload/f_auto,q_auto/cdn1/press/zoom-yuki-kiajura/kv_sao.jpg").getContent();
-                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                    final Drawable coverDrawable = Drawable.createFromStream(tester, animeImageName.text());
-//                    final Bitmap scaledBitmap = ImageEditor.resize(bitmap, bitmap.getWidth() * 2, bitmap.getHeight() * 2);
+                    final Bitmap scaledBitmap = ImageEditor.resize(BitmapFactory.decodeStream(inputStream), screenWidth, screenHeight);
                     urlDisplayView.findViewById(R.id.coverImageView).post(() ->
                             ((ImageView) urlDisplayView.findViewById(R.id.coverImageView))
-                                    .setImageBitmap(bitmap));
+                                    .setImageBitmap(scaledBitmap));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     Log.w("populateCoverImage", exception.toString());
