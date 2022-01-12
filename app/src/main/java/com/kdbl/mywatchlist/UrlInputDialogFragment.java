@@ -30,7 +30,6 @@ public class UrlInputDialogFragment extends DialogFragment {
                         URL = "https://myanimelist.net/anime/11757/Sword_Art_Online";
                         Bundle URLResult = new Bundle();
                         URLResult.putString("URL", URL);
-                        getParentFragmentManager().setFragmentResult("URLView", URLResult);
                         URLDisplayDialogFragment dialogFragment = new URLDisplayDialogFragment();
                         dialogFragment.setArguments(URLResult);
                         dialogFragment.show(getParentFragmentManager(), "displayURLContent");

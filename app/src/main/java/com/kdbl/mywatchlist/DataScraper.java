@@ -1,5 +1,7 @@
 package com.kdbl.mywatchlist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
@@ -76,12 +78,14 @@ public class DataScraper implements Executor {
                     Document document = Jsoup.connect(mURL).get();
                     Element animeImageName = document.selectFirst("h1.title-name.h1_bold_none");
                     Element imageURL = document.selectFirst("img[alt*=" + animeImageName.text() + "]");
-//                    InputStream inputStream = (InputStream) new URL(imageURL.absUrl("data-src")).getContent();
-                    InputStream tester = (InputStream) new URL("https://d2y6mqrpjbqoe6.cloudfront.net/image/upload/f_auto,q_auto/cdn1/press/zoom-yuki-kiajura/kv_sao.jpg").getContent();
-                    final Drawable coverDrawable = Drawable.createFromStream(tester, animeImageName.text());
+                    InputStream inputStream = (InputStream) new URL(imageURL.absUrl("data-src")).getContent();
+//                    InputStream tester = (InputStream) new URL("https://d2y6mqrpjbqoe6.cloudfront.net/image/upload/f_auto,q_auto/cdn1/press/zoom-yuki-kiajura/kv_sao.jpg").getContent();
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                    final Drawable coverDrawable = Drawable.createFromStream(tester, animeImageName.text());
+//                    final Bitmap scaledBitmap = ImageEditor.resize(bitmap, bitmap.getWidth() * 2, bitmap.getHeight() * 2);
                     urlDisplayView.findViewById(R.id.coverImageView).post(() ->
                             ((ImageView) urlDisplayView.findViewById(R.id.coverImageView))
-                                    .setImageDrawable(coverDrawable));
+                                    .setImageBitmap(bitmap));
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     Log.w("populateCoverImage", exception.toString());

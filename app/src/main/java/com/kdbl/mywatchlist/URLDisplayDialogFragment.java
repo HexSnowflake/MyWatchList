@@ -17,13 +17,6 @@ public class URLDisplayDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getParentFragmentManager().setFragmentResultListener("URLView", this,
-                new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        mDataURL = result.getString("URL");
-                    }
-                });
         mDataURL = getArguments().getString("URL");
     }
 
