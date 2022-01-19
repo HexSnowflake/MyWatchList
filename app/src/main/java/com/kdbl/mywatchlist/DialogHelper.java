@@ -57,15 +57,15 @@ public class DialogHelper {
     private void addButton(Dialog dialog, Cursor cursor, boolean isDelete) {
         Button button;
         if(isDelete) {
-            button = dialog.findViewById(R.id.delete_button);
+//            button = dialog.findViewById(R.id.delete_button);
         } else {
-            button = dialog.findViewById(R.id.save_button);
+//            button = dialog.findViewById(R.id.save_button);
         }
 
         /**
          * If position is -1, it means the button is for an addition
          */
-        button.setOnClickListener(v -> {
+        /*button.setOnClickListener(v -> {
             String nAnimeTitle = ((EditText)(dialog.findViewById(R.id.update_anime_title)))
                     .getText().toString();
             String nAnimeRating = ((EditText)(dialog.findViewById(R.id.update_anime_rating)))
@@ -116,5 +116,6 @@ public class DialogHelper {
         ListManager.insertInDb(adapter , openHelper, nAnimeTitle, nAnimeRating, nAnimeIsSketch);
         adapter.notifyDatabaseChanged(openHelper);
         return true;
+        */
     }
 }

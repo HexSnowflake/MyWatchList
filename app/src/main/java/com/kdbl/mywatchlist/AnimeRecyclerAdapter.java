@@ -1,9 +1,11 @@
 package com.kdbl.mywatchlist;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
@@ -19,6 +22,7 @@ import java.util.Map;
 
 public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdapter.ViewHolder> {
     private final Context mContext;
+    private MainActivity mActivity;
     private final LayoutInflater mLayoutInflater;
     private final WatchListOpenHelper mDbOpenHelper;
 
@@ -28,11 +32,12 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     private int mColIsSketchPos;
     private int mColIDPos;
 
-    public AnimeRecyclerAdapter(Context context, WatchListOpenHelper openHelper, Cursor cursor) {
+    public AnimeRecyclerAdapter(Context context, WatchListOpenHelper openHelper, Cursor cursor, MainActivity activity) {
         mContext = context;
         mCursor = cursor;
         mDbOpenHelper = openHelper;
         populateColumnPos();
+        mActivity = activity;
 //        used to create views
         mLayoutInflater = LayoutInflater.from(mContext);
     }
@@ -117,10 +122,20 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
+                    /*DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
                             mDbOpenHelper, ViewHolder.this.getBindingAdapterPosition());
                     mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
-                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);
+                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);*/
+                    String[] displayData = new String[3];
+                    mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
+                    displayData[0] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_TITLE));
+                    displayData[1] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_RATING));
+                    displayData[2] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH));
+                    Bundle nonUrlDisplayData = new Bundle();
+                    nonUrlDisplayData.putCharSequenceArray("NonUrlDisplayData", displayData);
+                    UpdateAnimeDialogFragment updateAnimeDF = new UpdateAnimeDialogFragment();
+                    updateAnimeDF.setArguments(nonUrlDisplayData);
+                    updateAnimeDF.show(mActivity.getSupportFragmentManager(), UpdateAnimeDialogFragment.TAG);
                 }
             });
         }

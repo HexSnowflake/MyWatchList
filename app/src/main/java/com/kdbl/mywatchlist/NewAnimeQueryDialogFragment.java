@@ -14,17 +14,16 @@ public class NewAnimeQueryDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("New Anime").setItems(new String[]{"URL", "Manual input"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0 :
-                        DialogFragment dialogFragment = new UrlInputDialogFragment();
-                        dialogFragment.show(getParentFragmentManager(), "URLInput");
-                        break;
-                    default:
-                        break;
-                }
+        builder.setTitle("New Anime").setItems(new String[]{"URL", "Manual input"}, (dialog, which) -> {
+            switch (which) {
+                case 0 :
+                    DialogFragment dialogFragment = new UrlInputDialogFragment();
+                    dialogFragment.show(getParentFragmentManager(), "URLInput");
+                    break;
+                default:
+                    DialogFragment manualInputDF = new ManualInputDialogFragment();
+                    manualInputDF.show(getParentFragmentManager(), ManualInputDialogFragment.TAG);
+                    break;
             }
         });
         return builder.create();

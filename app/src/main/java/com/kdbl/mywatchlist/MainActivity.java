@@ -1,17 +1,14 @@
 package com.kdbl.mywatchlist;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 // note it is bad practice to have any class as static or singleton because of memory leaks
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +28,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(v -> {
             Snackbar.make(v, "clicked fab", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-            /*
-            DialogHelper dialogHelper = new DialogHelper(this, mAnimeRecyclerAdapter,
-                    mDbOpenHelper, -1);
-            dialogHelper.generateDialog(R.layout.new_anime_dialog, null);*/
             NewAnimeQueryDialogFragment dialogFragment = new NewAnimeQueryDialogFragment();
             dialogFragment.show(getSupportFragmentManager(), "newAnime");
         });
@@ -72,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, mDbOpenHelper, null);
+        mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, mDbOpenHelper, null, this);
         mRecyclerView.setAdapter(mAnimeRecyclerAdapter);
     }
 }
