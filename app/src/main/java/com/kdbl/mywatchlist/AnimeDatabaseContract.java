@@ -10,12 +10,14 @@ public final class AnimeDatabaseContract {
         public static final String COLUMN_ANIME_TITLE = "anime_title";
         public static final String COLUMN_ANIME_RATING = "anime_rating";
         public static final String COLUMN_IS_SKETCH = "is_sketch";
+        public static final String COLUMN_ANIME_URL = "anime_url";
 
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY, " +
                         COLUMN_ANIME_TITLE + " TEXT UNIQUE NOT NULL, " +
                         COLUMN_ANIME_RATING + " INTEGER NOT NULL, " +
-                        COLUMN_IS_SKETCH + " TEXT NOT NULL)";
+                        COLUMN_IS_SKETCH + " TEXT NOT NULL, " +
+                        COLUMN_ANIME_URL + "TEXT UNIQUE)";
     }
 }

@@ -69,7 +69,7 @@ public class ListManager
         db.update(AnimeInfoEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
-    public static void insertInDb(AnimeRecyclerAdapter animeRecyclerAdapter, WatchListOpenHelper dbOpenHelper,
+    public static void insertInDb(WatchListOpenHelper dbOpenHelper,
                                  String title, String rating, String isSketch) {
         mDbHelper = dbOpenHelper;
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();

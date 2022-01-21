@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 public class UpdateAnimeDialogFragment extends DialogFragment {
     public static final String TAG = "Update Anime";
+    private String mOriginalTitle;
 
     @NonNull
     @Override
@@ -24,19 +25,29 @@ public class UpdateAnimeDialogFragment extends DialogFragment {
         ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_title))).setText(displayData[0]);
         ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_rating))).setText(displayData[1]);
         ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_isSketch))).setText(displayData[2]);
+        mOriginalTitle = displayData[0];
         return new AlertDialog.Builder(requireContext())
                 .setView(updateAnimeDialogView)
                 .setTitle("Update Anime")
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        save data into data base
+                        Bundle result = new Bundle();
+                        String[] inputs = new String[4];
+                        inputs[0] = ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_title))).getText().toString();
+                        inputs[1] = ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_rating))).getText().toString();
+                        inputs[2] = ((EditText)(updateAnimeDialogView.findViewById(R.id.update_anime_isSketch))).getText().toString();
+                        inputs[3] = mOriginalTitle;
+                        result.putCharSequenceArray("ManualInputUpdateAnime", inputs);
+                        getParentFragmentManager().setFragmentResult("ManualInputUpdateAnime", result);
                     }
                 })
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        delete data from data base
+                        Bundle result = new Bundle();
+                        result.putString("ManualInputDeleteAnime", mOriginalTitle);
+                        getParentFragmentManager().setFragmentResult("ManualInputDeleteAnime", result);
                     }
                 }).create();
     }

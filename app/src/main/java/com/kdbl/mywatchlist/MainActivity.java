@@ -1,6 +1,8 @@
 package com.kdbl.mywatchlist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +45,32 @@ public class MainActivity extends AppCompatActivity {
             URLDisplayDialogFragment displayDialogFragment = new URLDisplayDialogFragment();
             displayDialogFragment.setArguments(bundle);
             displayDialogFragment.show(getSupportFragmentManager(), "displayUrlFragment");
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("ManualInputNewAnime", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String[] inputData = (String[]) result.getCharSequenceArray("ManualInputNewAnime");
+                ListManager.insertInDb(mDbOpenHelper, inputData[0], inputData[1], inputData[2]);
+                mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+            }
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("ManualInputUpdateAnime", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String[] inputData = (String[]) result.getCharSequenceArray("ManualInputUpdateAnime");
+                ListManager.updateDb(mDbOpenHelper,inputData[3], inputData[0], inputData[1], inputData[2]);
+                mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+            }
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("ManualInputDeleteAnime", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                ListManager.deleteFromDb(mDbOpenHelper, result.getString("ManualInputDeleteAnime"));
+                mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+            }
         });
 
         initializeDisplayContent();
