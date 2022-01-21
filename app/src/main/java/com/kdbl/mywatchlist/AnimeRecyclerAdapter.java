@@ -122,10 +122,6 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*DialogHelper dialogHelper = new DialogHelper(mContext, AnimeRecyclerAdapter.this,
-                            mDbOpenHelper, ViewHolder.this.getBindingAdapterPosition());
-                    mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
-                    dialogHelper.generateDialog(R.layout.update_anime_dialog, mCursor);*/
                     String[] displayData = new String[3];
                     mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
                     displayData[0] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_TITLE));

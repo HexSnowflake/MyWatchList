@@ -46,8 +46,8 @@ public class DataScraper implements Executor {
                         i++;
                     }
 //                    Populate view
-                    urlDisplayView.findViewById(R.id.synonymTextView).post(() ->
-                            ((TextView) urlDisplayView.findViewById(R.id.synonymTextView))
+                    urlDisplayView.findViewById(R.id.editTextTitle).post(() ->
+                            ((TextView) urlDisplayView.findViewById(R.id.editTextTitle))
                                     .setText(data[0]));
                     urlDisplayView.findViewById(R.id.englishTextView).post(() ->
                             ((TextView) urlDisplayView.findViewById(R.id.englishTextView))

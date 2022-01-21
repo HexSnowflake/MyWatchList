@@ -22,7 +22,7 @@ public class UrlInputDialogFragment extends DialogFragment {
         View inputDialogView = inflater.inflate(R.layout.url_input_dialog, null);
 
         builder.setView(inputDialogView)
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String url = ((EditText) inputDialogView.findViewById(R.id.editTextURL)).getText().toString();
