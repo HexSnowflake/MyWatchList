@@ -119,19 +119,22 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             mTextTitle = itemView.findViewById(R.id.text_title);
             mTextRating = itemView.findViewById(R.id.text_rating);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String[] displayData = new String[3];
-                    mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
-                    displayData[0] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_TITLE));
-                    displayData[1] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_RATING));
-                    displayData[2] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH));
+            itemView.setOnClickListener(v -> {
+                String[] displayData = new String[3];
+                mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
+                displayData[0] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_TITLE));
+                displayData[1] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_RATING));
+                displayData[2] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH));
+                int urlColumnIndex = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_URL);
+                if(urlColumnIndex == -1) {
                     Bundle nonUrlDisplayData = new Bundle();
                     nonUrlDisplayData.putCharSequenceArray("NonUrlDisplayData", displayData);
                     UpdateAnimeDialogFragment updateAnimeDF = new UpdateAnimeDialogFragment();
                     updateAnimeDF.setArguments(nonUrlDisplayData);
                     updateAnimeDF.show(mActivity.getSupportFragmentManager(), UpdateAnimeDialogFragment.TAG);
+                } else {
+                    String url = mCursor.getString(urlColumnIndex);
+                    mActivity.createUrlDisplayDialog(displayData, url);
                 }
             });
         }

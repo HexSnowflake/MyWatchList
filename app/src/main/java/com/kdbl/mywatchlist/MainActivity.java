@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             urlDisplayInfo[2] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().height());
             Bundle bundle = new Bundle();
             bundle.putCharSequenceArray("urlDisplayInfo", urlDisplayInfo);
+            bundle.putString("isNew", "isNew");
             URLDisplayDialogFragment displayDialogFragment = new URLDisplayDialogFragment();
             displayDialogFragment.setArguments(bundle);
             displayDialogFragment.show(getSupportFragmentManager(), "displayUrlFragment");
@@ -73,6 +74,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        getSupportFragmentManager().setFragmentResultListener("UrlInputUpdateAnime", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String[] inputs = (String[]) result.getCharSequenceArray("UrlInputsData");
+                if(ListManager.getInstance().contains(inputs[0])) {
+//                    tell the user anime already exists
+                }
+                else if(result.getString("isNew") != null) {
+                    ListManager.insertInDB(mDbOpenHelper, inputs[0], inputs[1], inputs[2], result.getString("UrlInputUrl"));
+                } else {
+                    ListManager.updateDb(mDbOpenHelper, inputs[0], inputs[1], inputs[2], inputs[3], result.getString("UrlInputUrl"));
+                }
+                mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+            }
+        });
+
         initializeDisplayContent();
     }
 
@@ -95,5 +112,18 @@ public class MainActivity extends AppCompatActivity {
 
         mAnimeRecyclerAdapter = new AnimeRecyclerAdapter(this, mDbOpenHelper, null, this);
         mRecyclerView.setAdapter(mAnimeRecyclerAdapter);
+    }
+
+    public void createUrlDisplayDialog(String[] displayData, String url) {
+        URLDisplayDialogFragment urlDisplayDF = new URLDisplayDialogFragment();
+        String[] urlDisplayInfo = new String[3];
+        urlDisplayInfo[0] = url;
+        urlDisplayInfo[1] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().width());
+        urlDisplayInfo[2] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().height());
+        Bundle arguments = new Bundle();
+        arguments.putCharSequenceArray("UrlDisplayData", displayData);
+        arguments.putCharSequenceArray("UrlDisplayInfo", urlDisplayInfo);
+        urlDisplayDF.setArguments(arguments);
+        urlDisplayDF.show(getSupportFragmentManager(), "displayUrlFragment");
     }
 }

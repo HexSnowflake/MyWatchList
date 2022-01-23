@@ -52,6 +52,11 @@ public class ListManager
 
     public static void updateDb(WatchListOpenHelper openHelper, String originalTitle,
                                String title, String rating, String isSketch) {
+        updateDb(openHelper, originalTitle, title, rating, isSketch, null);
+    }
+
+    public static void updateDb(WatchListOpenHelper openHelper, String originalTitle,
+                                String title, String rating, String isSketch, String url) {
         mDbHelper = openHelper;
         SQLiteDatabase db = openHelper.getWritableDatabase();
 
@@ -59,6 +64,9 @@ public class ListManager
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, title);
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
+        if(url != null) {
+            values.put(AnimeInfoEntry.COLUMN_ANIME_URL, url);
+        }
 
         instance.mSet.remove(originalTitle);
         instance.mSet.add(title);
@@ -71,6 +79,10 @@ public class ListManager
 
     public static void insertInDb(WatchListOpenHelper dbOpenHelper,
                                  String title, String rating, String isSketch) {
+        insertInDB(dbOpenHelper, title, rating, isSketch, null);
+    }
+
+    public static void insertInDB(WatchListOpenHelper dbOpenHelper, String title, String rating, String isSketch, String url) {
         mDbHelper = dbOpenHelper;
         SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
 
@@ -80,6 +92,9 @@ public class ListManager
         values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, title);
         values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, rating);
         values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, isSketch);
+        if(url != null) {
+            values.put(AnimeInfoEntry.COLUMN_ANIME_URL, url);
+        }
 
         db.insert(AnimeInfoEntry.TABLE_NAME, null, values);
     }
