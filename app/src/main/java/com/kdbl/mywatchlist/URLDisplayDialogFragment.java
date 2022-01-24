@@ -2,37 +2,39 @@ package com.kdbl.mywatchlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentResultListener;
 
 public class URLDisplayDialogFragment extends DialogFragment {
-    String[] mData;
+    String[] mDisplayInfo;
+    String[] mDisplayData;
     private String mOriginalTitle;
-    private String isNew;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 //        TODO: Implement support for user to update title themselves
-        mData = (String[]) getArguments().getCharSequenceArray("urlDisplayInfo");
-        isNew = getArguments().getString("isNew");
-        DataScraper dataScraper = new DataScraper(mData[0]);
+        mDisplayInfo = (String[]) getArguments().getCharSequenceArray("urlDisplayInfo");
+        mDisplayData = (String[]) getArguments().getCharSequenceArray("urlDisplayData");
+        DataScraper dataScraper = new DataScraper(mDisplayInfo[0]);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View urlDisplayView = inflater.inflate(R.layout.url_display_dialog, null);
-        dataScraper.populateAnimeInfo(urlDisplayView);
-        dataScraper.populateCoverImage(urlDisplayView, Integer.parseInt(mData[1]), Integer.parseInt(mData[2]));
+        if(mDisplayData == null) {
+            dataScraper.populateAnimeInfo(urlDisplayView, true);
+        } else {
+            dataScraper.populateAnimeInfo(urlDisplayView, false);
+            ((EditText)urlDisplayView.findViewById(R.id.editTextTitle)).setText(mDisplayData[0]);
+            ((EditText)urlDisplayView.findViewById(R.id.editTextRating)).setText(mDisplayData[1]);
+            ((EditText)urlDisplayView.findViewById(R.id.editTextIsSketch)).setText(mDisplayData[2]);
+        }
+        dataScraper.populateCoverImage(urlDisplayView, Integer.parseInt(mDisplayInfo[1]), Integer.parseInt(mDisplayInfo[2]));
         mOriginalTitle = ((EditText)urlDisplayView.findViewById(R.id.editTextTitle)).getText().toString();
         return new AlertDialog.Builder(requireContext())
                 .setView(urlDisplayView)
@@ -46,9 +48,11 @@ public class URLDisplayDialogFragment extends DialogFragment {
                         inputs[2] = ((EditText) urlDisplayView.findViewById(R.id.editTextIsSketch)).getText().toString();
                         inputs[3] = mOriginalTitle;
                         result.putCharSequenceArray("UrlInputData", inputs);
-                        result.putString("UrlInputUrl", mData[0]);
-                        if(isNew != null) {
-                            result.putString("isNew", isNew);
+                        result.putString("UrlInputUrl", mDisplayInfo[0]);
+                        if(mDisplayData != null) {
+                            result.putBoolean("isNew", false);
+                        } else {
+                            result.putBoolean("isNew", true);
                         }
                         getParentFragmentManager().setFragmentResult("UrlInputUpdateAnime", result);
                     }

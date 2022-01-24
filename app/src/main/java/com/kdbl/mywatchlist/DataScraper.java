@@ -27,10 +27,10 @@ public class DataScraper implements Executor {
     private final String mURL;
 
     public DataScraper(String URL) {
-        mURL = URL;
+        mURL = "https://myanimelist.net/anime/11757/Sword_Art_Online";
     }
 
-    public void populateAnimeInfo(View urlDisplayView) {
+    public void populateAnimeInfo(View urlDisplayView, boolean isNew) {
         this.execute(new Runnable() {
             @Override
             public void run() {
@@ -46,9 +46,11 @@ public class DataScraper implements Executor {
                         i++;
                     }
 //                    Populate view
-                    urlDisplayView.findViewById(R.id.editTextTitle).post(() ->
-                            ((TextView) urlDisplayView.findViewById(R.id.editTextTitle))
-                                    .setText(data[0]));
+                    if(isNew) {
+                        urlDisplayView.findViewById(R.id.editTextTitle).post(() ->
+                                ((TextView) urlDisplayView.findViewById(R.id.editTextTitle))
+                                        .setText(data[0]));
+                    }
                     urlDisplayView.findViewById(R.id.englishTextView).post(() ->
                             ((TextView) urlDisplayView.findViewById(R.id.englishTextView))
                                     .setText(data[2]));

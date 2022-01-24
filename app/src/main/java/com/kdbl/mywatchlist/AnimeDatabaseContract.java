@@ -18,6 +18,6 @@ public final class AnimeDatabaseContract {
                         COLUMN_ANIME_TITLE + " TEXT UNIQUE NOT NULL, " +
                         COLUMN_ANIME_RATING + " INTEGER NOT NULL, " +
                         COLUMN_IS_SKETCH + " TEXT NOT NULL, " +
-                        COLUMN_ANIME_URL + "TEXT UNIQUE)";
+                        COLUMN_ANIME_URL + " TEXT UNIQUE)";
     }
 }

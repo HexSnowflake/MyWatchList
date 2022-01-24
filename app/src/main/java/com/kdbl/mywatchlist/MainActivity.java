@@ -77,14 +77,14 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().setFragmentResultListener("UrlInputUpdateAnime", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                String[] inputs = (String[]) result.getCharSequenceArray("UrlInputsData");
+                String[] inputs = (String[]) result.getCharSequenceArray("UrlInputData");
                 if(ListManager.getInstance().contains(inputs[0])) {
 //                    tell the user anime already exists
                 }
-                else if(result.getString("isNew") != null) {
+                else if(result.getBoolean("isNew")) {
                     ListManager.insertInDB(mDbOpenHelper, inputs[0], inputs[1], inputs[2], result.getString("UrlInputUrl"));
                 } else {
-                    ListManager.updateDb(mDbOpenHelper, inputs[0], inputs[1], inputs[2], inputs[3], result.getString("UrlInputUrl"));
+                    ListManager.updateDb(mDbOpenHelper, inputs[3], inputs[0], inputs[1], inputs[2], result.getString("UrlInputUrl"));
                 }
                 mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
             }
