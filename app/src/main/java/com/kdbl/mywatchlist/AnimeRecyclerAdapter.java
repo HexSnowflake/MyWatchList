@@ -31,6 +31,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
     private int mColRatingPos;
     private int mColIsSketchPos;
     private int mColIDPos;
+    private int mColUrl;
 
     public AnimeRecyclerAdapter(Context context, WatchListOpenHelper openHelper, Cursor cursor, MainActivity activity) {
         mContext = context;
@@ -49,6 +50,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         mColTitlePos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_TITLE);
         mColRatingPos = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_RATING);
         mColIsSketchPos = mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH);
+        mColUrl = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_URL);
         mColIDPos = mCursor.getColumnIndexOrThrow(AnimeInfoEntry._ID);
     }
 
@@ -69,12 +71,14 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
         changeCursorAndUpdateData(getCursor(openHelper));
     }
 
+//    TODO: Get the cursor bro
     public Cursor getCursor(WatchListOpenHelper openHelper) {
         SQLiteDatabase db = openHelper.getReadableDatabase();
         String[] animeListColumns = {
                 AnimeInfoEntry.COLUMN_ANIME_TITLE,
                 AnimeInfoEntry.COLUMN_ANIME_RATING,
                 AnimeInfoEntry.COLUMN_IS_SKETCH,
+                AnimeInfoEntry.COLUMN_ANIME_URL,
                 AnimeInfoEntry._ID};
         String orderBy = AnimeInfoEntry.COLUMN_ANIME_RATING + " DESC"
                 + "," + AnimeInfoEntry.COLUMN_ANIME_TITLE;
@@ -122,18 +126,18 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
             itemView.setOnClickListener(v -> {
                 String[] displayData = new String[3];
                 mCursor.moveToPosition(ViewHolder.this.getBindingAdapterPosition());
-                displayData[0] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_TITLE));
-                displayData[1] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_ANIME_RATING));
-                displayData[2] = mCursor.getString(mCursor.getColumnIndexOrThrow(AnimeInfoEntry.COLUMN_IS_SKETCH));
-                int urlColumnIndex = mCursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_URL);
-                if(urlColumnIndex == -1) {
+                displayData[0] = mCursor.getString(mColTitlePos);
+                displayData[1] = mCursor.getString(mColRatingPos);
+                displayData[2] = mCursor.getString(mColIsSketchPos);
+                String urlTesting = mCursor.getString(mColUrl);
+                if(urlTesting == null) {
                     Bundle nonUrlDisplayData = new Bundle();
                     nonUrlDisplayData.putCharSequenceArray("NonUrlDisplayData", displayData);
                     UpdateAnimeDialogFragment updateAnimeDF = new UpdateAnimeDialogFragment();
                     updateAnimeDF.setArguments(nonUrlDisplayData);
                     updateAnimeDF.show(mActivity.getSupportFragmentManager(), UpdateAnimeDialogFragment.TAG);
                 } else {
-                    String url = mCursor.getString(urlColumnIndex);
+                    String url = mCursor.getString(mColUrl);
                     mActivity.createUrlDisplayDialog(displayData, url);
                 }
             });

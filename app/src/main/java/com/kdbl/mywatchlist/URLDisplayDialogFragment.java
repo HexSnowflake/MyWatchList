@@ -21,8 +21,8 @@ public class URLDisplayDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 //        TODO: Implement support for user to update title themselves
-        mDisplayInfo = (String[]) getArguments().getCharSequenceArray("urlDisplayInfo");
-        mDisplayData = (String[]) getArguments().getCharSequenceArray("urlDisplayData");
+        mDisplayInfo = (String[]) getArguments().getCharSequenceArray("UrlDisplayInfo");
+        mDisplayData = (String[]) getArguments().getCharSequenceArray("UrlDisplayData");
         DataScraper dataScraper = new DataScraper(mDisplayInfo[0]);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View urlDisplayView = inflater.inflate(R.layout.url_display_dialog, null);

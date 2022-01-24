@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             urlDisplayInfo[1] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().width());
             urlDisplayInfo[2] = String.valueOf(getWindowManager().getCurrentWindowMetrics().getBounds().height());
             Bundle bundle = new Bundle();
-            bundle.putCharSequenceArray("urlDisplayInfo", urlDisplayInfo);
+            bundle.putCharSequenceArray("UrlDisplayInfo", urlDisplayInfo);
             bundle.putString("isNew", "isNew");
             URLDisplayDialogFragment displayDialogFragment = new URLDisplayDialogFragment();
             displayDialogFragment.setArguments(bundle);
@@ -86,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     ListManager.updateDb(mDbOpenHelper, inputs[3], inputs[0], inputs[1], inputs[2], result.getString("UrlInputUrl"));
                 }
+                mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
+            }
+        });
+
+        getSupportFragmentManager().setFragmentResultListener("UrlInputDeleteAnime", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                ListManager.deleteFromDb(mDbOpenHelper, result.getString("UrlInputDeleteAnime"));
                 mAnimeRecyclerAdapter.notifyDatabaseChanged(mDbOpenHelper);
             }
         });

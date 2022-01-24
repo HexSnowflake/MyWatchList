@@ -27,7 +27,7 @@ public class DataScraper implements Executor {
     private final String mURL;
 
     public DataScraper(String URL) {
-        mURL = "https://myanimelist.net/anime/11757/Sword_Art_Online";
+        mURL = URL;
     }
 
     public void populateAnimeInfo(View urlDisplayView, boolean isNew) {

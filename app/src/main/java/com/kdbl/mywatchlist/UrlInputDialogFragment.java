@@ -25,7 +25,9 @@ public class UrlInputDialogFragment extends DialogFragment {
                 .setPositiveButton("Next", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = ((EditText) inputDialogView.findViewById(R.id.editTextURL)).getText().toString();
+//                        String url = ((EditText) inputDialogView.findViewById(R.id.editTextURL)).getText().toString();
+//                        testing
+                        String url = "https://myanimelist.net/anime/11757/Sword_Art_Online";
                         Bundle urlResult = new Bundle();
                         urlResult.putString("url", url);
                         getParentFragmentManager().setFragmentResult("urlToDisplay", urlResult);
