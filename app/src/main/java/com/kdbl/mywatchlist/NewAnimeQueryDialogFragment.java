@@ -2,7 +2,6 @@ package com.kdbl.mywatchlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class NewAnimeQueryDialogFragment extends DialogFragment {
+    public static final String NEW_ANIME_QUERY_DIALOG_FRAGMENT_TAG = "newAnimeQuery";
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -18,11 +19,11 @@ public class NewAnimeQueryDialogFragment extends DialogFragment {
             switch (which) {
                 case 0 :
                     DialogFragment dialogFragment = new UrlInputDialogFragment();
-                    dialogFragment.show(getParentFragmentManager(), "URLInput");
+                    dialogFragment.show(getParentFragmentManager(), UrlInputDialogFragment.URL_INPUT_DIALOG_FRAGMENT_TAG);
                     break;
                 default:
                     DialogFragment manualInputDF = new ManualInputDialogFragment();
-                    manualInputDF.show(getParentFragmentManager(), ManualInputDialogFragment.TAG);
+                    manualInputDF.show(getParentFragmentManager(), ManualInputDialogFragment.MANUAL_INPUT_DIALOG_FRAGMENT_TAG);
                     break;
             }
         });

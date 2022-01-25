@@ -131,11 +131,7 @@ public class AnimeRecyclerAdapter extends RecyclerView.Adapter<AnimeRecyclerAdap
                 displayData[2] = mCursor.getString(mColIsSketchPos);
                 String urlTesting = mCursor.getString(mColUrl);
                 if(urlTesting == null) {
-                    Bundle nonUrlDisplayData = new Bundle();
-                    nonUrlDisplayData.putCharSequenceArray("NonUrlDisplayData", displayData);
-                    UpdateAnimeDialogFragment updateAnimeDF = new UpdateAnimeDialogFragment();
-                    updateAnimeDF.setArguments(nonUrlDisplayData);
-                    updateAnimeDF.show(mActivity.getSupportFragmentManager(), UpdateAnimeDialogFragment.TAG);
+                    mActivity.createNonUrlDisplayDialog(displayData);
                 } else {
                     String url = mCursor.getString(mColUrl);
                     mActivity.createUrlDisplayDialog(displayData, url);

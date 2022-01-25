@@ -13,6 +13,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class URLDisplayDialogFragment extends DialogFragment {
+    public static final String DISPLAY_INFO_TAG = "UrlDisplayInfo";
+    public static final String DISPLAY_DATA_TAG = "UrlDisplayData";
+    public static final String INPUT_DATA_TAG = "UrlInputData";
+    public static final String INPUT_URL_TAG = "UrlInputUrl";
+    public static final String IS_NEW_TAG = "isNew";
+    public static final String UPDATE_ANIME_TAG = "UrlInputUpdateAnime";
+    public static final String DELETE_ANIME_TAG = "UrlInputDeleteAnime";
+    public static final String ORIGINAL_TITLE_TAG = "OriginalTitle";
+    public static final String URL_DISPLAY_DIALOG_FRAGMENT_TAG = "DisplayUrlDF";
+
     String[] mDisplayInfo;
     String[] mDisplayData;
     private String mOriginalTitle;
@@ -21,8 +31,8 @@ public class URLDisplayDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 //        TODO: Implement support for user to update title themselves
-        mDisplayInfo = (String[]) getArguments().getCharSequenceArray("UrlDisplayInfo");
-        mDisplayData = (String[]) getArguments().getCharSequenceArray("UrlDisplayData");
+        mDisplayInfo = (String[]) getArguments().getCharSequenceArray(DISPLAY_INFO_TAG);
+        mDisplayData = (String[]) getArguments().getCharSequenceArray(DISPLAY_DATA_TAG);
         DataScraper dataScraper = new DataScraper(mDisplayInfo[0]);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View urlDisplayView = inflater.inflate(R.layout.url_display_dialog, null);
@@ -47,22 +57,22 @@ public class URLDisplayDialogFragment extends DialogFragment {
                         inputs[1] = ((EditText) urlDisplayView.findViewById(R.id.editTextRating)).getText().toString();
                         inputs[2] = ((EditText) urlDisplayView.findViewById(R.id.editTextIsSketch)).getText().toString();
                         inputs[3] = mOriginalTitle;
-                        result.putCharSequenceArray("UrlInputData", inputs);
-                        result.putString("UrlInputUrl", mDisplayInfo[0]);
+                        result.putCharSequenceArray(INPUT_DATA_TAG, inputs);
+                        result.putString(INPUT_URL_TAG, mDisplayInfo[0]);
                         if(mDisplayData != null) {
-                            result.putBoolean("isNew", false);
+                            result.putBoolean(IS_NEW_TAG, false);
                         } else {
-                            result.putBoolean("isNew", true);
+                            result.putBoolean(IS_NEW_TAG, true);
                         }
-                        getParentFragmentManager().setFragmentResult("UrlInputUpdateAnime", result);
+                        getParentFragmentManager().setFragmentResult(UPDATE_ANIME_TAG, result);
                     }
                 })
                 .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Bundle result = new Bundle();
-                        result.putString("UrlInputDeleteAnime", mOriginalTitle);
-                        getParentFragmentManager().setFragmentResult("UrlInputDeleteAnime", result);
+                        result.putString(ORIGINAL_TITLE_TAG, mOriginalTitle);
+                        getParentFragmentManager().setFragmentResult(DELETE_ANIME_TAG, result);
                     }
                 }).create();
     }

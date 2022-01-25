@@ -2,22 +2,20 @@ package com.kdbl.mywatchlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.zip.Inflater;
-
 public class ManualInputDialogFragment extends DialogFragment {
 
-    public static final String TAG = "Manual Input";
+    public static final String MANUAL_INPUT_DIALOG_FRAGMENT_TAG = "Manual Input";
+    public static final String MANUAL_INPUT_DATA_TAG = "ManualInputNewAnime";
+    public static final String NEW_ANIME_TAG = "ManualInputNewAnime";
 
     @NonNull
     @Override
@@ -33,8 +31,8 @@ public class ManualInputDialogFragment extends DialogFragment {
                     inputs[0] = ((EditText) (view.findViewById(R.id.update_anime_title))).getText().toString();
                     inputs[1] = ((EditText) (view.findViewById(R.id.update_anime_rating))).getText().toString();
                     inputs[2] = ((EditText) (view.findViewById(R.id.update_anime_isSketch))).getText().toString();
-                    results.putCharSequenceArray("ManualInputNewAnime", inputs);
-                    getParentFragmentManager().setFragmentResult("ManualInputNewAnime", results);
+                    results.putCharSequenceArray(MANUAL_INPUT_DATA_TAG, inputs);
+                    getParentFragmentManager().setFragmentResult(NEW_ANIME_TAG, results);
                 }).create();
     }
 }
