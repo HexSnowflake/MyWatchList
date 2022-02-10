@@ -15,6 +15,7 @@ import androidx.annotation.LayoutRes;
 
 import com.google.android.material.snackbar.Snackbar;
 
+//Deprecated
 public class DialogHelper {
     private final Context mContext;
     private AnimeRecyclerAdapter mAnimeRecyclerAdapter;
