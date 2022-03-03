@@ -1,14 +1,21 @@
 package com.kdbl.mywatchlist;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -19,6 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private WatchListOpenHelper mDbOpenHelper;
     private RecyclerView mRecyclerView;
     private AnimeRecyclerAdapter mAnimeRecyclerAdapter;
+
+    ActivityResultLauncher<String[]> mOpenFile = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
+        @Override
+        public void onActivityResult(Uri result) {
+//              handle result
+
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +75,27 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.open_csv:
+                promptOpenFile();
+                return true;
+            case R.id.save_as_csv:
+                saveAsCSV();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void saveAsCSV() {
+    }
+
+    private void promptOpenFile() {
+        mOpenFile.launch(new String[2]);
     }
 
     private void initializeDisplayContent() {
