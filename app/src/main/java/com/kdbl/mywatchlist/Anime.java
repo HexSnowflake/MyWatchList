@@ -23,6 +23,10 @@ public class Anime implements Comparable<Anime>{
         return mRating;
     }
 
+    public boolean getIsSketch() {
+        return mIsSketch;
+    }
+
     public Anime(String title, int rating, boolean isSketch) {
         this(title, rating, isSketch, "");
     }

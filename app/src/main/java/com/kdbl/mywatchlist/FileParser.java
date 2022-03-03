@@ -1,5 +1,7 @@
 package com.kdbl.mywatchlist;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
@@ -7,9 +9,17 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 public class FileParser {
+
+    private final WatchListOpenHelper mDbOpenHelper;
+
+    public FileParser(WatchListOpenHelper openHelper) {
+        mDbOpenHelper = openHelper;
+    }
+
     public void parseCsvFile(InputStream in) {
         Queue<Anime> parsedList = new LinkedList<>();
         try {
@@ -29,5 +39,19 @@ public class FileParser {
         }
 
 //        save to db
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+
+        for(Anime anime : parsedList) {
+            ContentValues values = new ContentValues();
+            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, anime.getTitle());
+            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, anime.getRating());
+            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, anime.getIsSketch());
+            if(!anime.getUrl().isEmpty()) {
+                values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_URL, anime.getUrl());
+            }
+
+            db.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+        }
+
     }
 }
