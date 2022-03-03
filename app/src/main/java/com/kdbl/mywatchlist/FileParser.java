@@ -14,6 +14,7 @@ import java.util.Queue;
 
 public class FileParser {
 
+//    TODO: The recycler's displayed items must be updated once parse csv is called
     private final WatchListOpenHelper mDbOpenHelper;
 
     public FileParser(WatchListOpenHelper openHelper) {

@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 // note it is bad practice to have any class as static or singleton because of memory leaks
 public class MainActivity extends AppCompatActivity {
@@ -27,11 +31,17 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private AnimeRecyclerAdapter mAnimeRecyclerAdapter;
 
-    ActivityResultLauncher<String[]> mOpenFile = registerForActivityResult(new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
+    ActivityResultLauncher<String[]> mOpenFile = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), new ActivityResultCallback<Uri>() {
         @Override
         public void onActivityResult(Uri result) {
-//              handle result
-
+            try {
+                InputStream in = MainActivity.this.getContentResolver().openInputStream(result);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                Log.w("onActivityResult", exception.toString());
+                throw new java.lang.UnsupportedOperationException();
+            }
         }
     });
 
