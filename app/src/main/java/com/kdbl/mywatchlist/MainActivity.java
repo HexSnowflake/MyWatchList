@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.AnimRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
@@ -21,8 +22,12 @@ import android.view.MenuItem;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 // note it is bad practice to have any class as static or singleton because of memory leaks
 public class MainActivity extends AppCompatActivity {
@@ -37,9 +42,45 @@ public class MainActivity extends AppCompatActivity {
         public void onActivityResult(Uri result) {
             try {
                 InputStream in = MainActivity.this.getContentResolver().openInputStream(result);
+                FileParser fileParser = new FileParser(MainActivity.this.mDbOpenHelper);
+                fileParser.parseCsvFile(in);
+                MainActivity.this.mAnimeRecyclerAdapter
+                        .notifyDatabaseChanged(MainActivity.this.mDbOpenHelper);
             } catch (Exception exception) {
                 exception.printStackTrace();
                 Log.w("onActivityResult", exception.toString());
+                throw new java.lang.UnsupportedOperationException();
+            }
+        }
+    });
+
+    ActivityResultLauncher<Uri> mSaveBackupFile = registerForActivityResult(
+            new ActivityResultContracts.OpenDocumentTree(), new ActivityResultCallback<Uri>() {
+        @Override
+        public void onActivityResult(Uri result) {
+            List<Anime> animeList = new ArrayList<>();
+            FileParser fileParser = new FileParser(mDbOpenHelper);
+            animeList = fileParser.convertDbToList();
+
+            File backupCsv = new File(result.getPath(), "backup");
+            if(!backupCsv.exists()) {
+                backupCsv.mkdir();
+            }
+
+            try {
+                File backupCsvFile = new File(backupCsv, "csvList");
+                FileWriter writer = new FileWriter(backupCsvFile);
+                for(Anime n : animeList) {
+                    writer.append(n.getTitle() +
+                            "," + n.getRating() +
+                            "," + n.getIsSketch() +
+                            "," + n.getUrl() + "\n");
+                }
+                writer.flush();
+                writer.close();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                Log.w("saveAsCSV", exception.toString());
                 throw new java.lang.UnsupportedOperationException();
             }
         }
@@ -102,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveAsCSV() {
+        mSaveBackupFile.launch(null);
     }
 
     private void promptOpenFile() {

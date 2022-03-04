@@ -1,14 +1,19 @@
 package com.kdbl.mywatchlist;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import com.kdbl.mywatchlist.AnimeDatabaseContract.AnimeInfoEntry;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 
@@ -44,15 +49,38 @@ public class FileParser {
 
         for(Anime anime : parsedList) {
             ContentValues values = new ContentValues();
-            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_TITLE, anime.getTitle());
-            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_RATING, anime.getRating());
-            values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_IS_SKETCH, anime.getIsSketch());
+            values.put(AnimeInfoEntry.COLUMN_ANIME_TITLE, anime.getTitle());
+            values.put(AnimeInfoEntry.COLUMN_ANIME_RATING, anime.getRating());
+            values.put(AnimeInfoEntry.COLUMN_IS_SKETCH, anime.getIsSketch());
             if(!anime.getUrl().isEmpty()) {
-                values.put(AnimeDatabaseContract.AnimeInfoEntry.COLUMN_ANIME_URL, anime.getUrl());
+                values.put(AnimeInfoEntry.COLUMN_ANIME_URL, anime.getUrl());
             }
 
-            db.insert(AnimeDatabaseContract.AnimeInfoEntry.TABLE_NAME, null, values);
+            db.insert(AnimeInfoEntry.TABLE_NAME, null, values);
         }
+    }
 
+    public List<Anime> convertDbToList() {
+        List<Anime> animeList = new ArrayList<>();
+        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+        String[] animeListCol = {
+                AnimeInfoEntry.COLUMN_ANIME_TITLE,
+                AnimeInfoEntry.COLUMN_ANIME_RATING,
+                AnimeInfoEntry.COLUMN_IS_SKETCH,
+                AnimeInfoEntry.COLUMN_ANIME_URL};
+        Cursor cursor = db.query(AnimeInfoEntry.TABLE_NAME, animeListCol,
+                null, null, null, null, null);
+        int titleColPos = cursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_TITLE);
+        int ratingColPos = cursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_RATING);
+        int isSketchColPos = cursor.getColumnIndex(AnimeInfoEntry.COLUMN_IS_SKETCH);
+        int urlColPos = cursor.getColumnIndex(AnimeInfoEntry.COLUMN_ANIME_URL);
+        while(cursor.moveToNext()) {
+            animeList.add(new Anime(
+                    cursor.getString(titleColPos),
+                    Integer.parseInt(cursor.getString(ratingColPos)),
+                    Boolean.parseBoolean(cursor.getString(isSketchColPos)),
+                    cursor.getString(urlColPos)));
+        }
+        return animeList;
     }
 }
