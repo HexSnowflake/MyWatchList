@@ -15,7 +15,7 @@ public class Anime implements Comparable<Anime>{
 
     public String getUrl() {
         if(mUrl.isEmpty())
-            return null;
+            return "";
         return mUrl;
     }
 
@@ -28,12 +28,16 @@ public class Anime implements Comparable<Anime>{
     }
 
     public Anime(String title, int rating, boolean isSketch) {
-        this(title, rating, isSketch, "");
+        this(title, rating, isSketch, null);
     }
 
     public Anime(String title, int rating, boolean isSketch, String url) {
         mTitle = title;
-        mUrl = url;
+        if(url == null) {
+            mUrl = "";
+        } else {
+            mUrl = url;
+        }
         mRating = rating;
         mIsSketch = isSketch;
     }

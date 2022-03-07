@@ -2,16 +2,19 @@ package com.kdbl.mywatchlist;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.AnimRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +29,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,35 +59,45 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
-    ActivityResultLauncher<Uri> mSaveBackupFile = registerForActivityResult(
-            new ActivityResultContracts.OpenDocumentTree(), new ActivityResultCallback<Uri>() {
+    ActivityResultLauncher<String> mSaveBackupFile = registerForActivityResult(
+            new CreateTxtDocument(), new ActivityResultCallback<Uri>() {
         @Override
         public void onActivityResult(Uri result) {
-            List<Anime> animeList = new ArrayList<>();
+            List<Anime> animeList;
             FileParser fileParser = new FileParser(mDbOpenHelper);
             animeList = fileParser.convertDbToList();
 
-            File backupCsv = new File(result.getPath(), "backup");
-            if(!backupCsv.exists()) {
-                backupCsv.mkdir();
-            }
-
             try {
-                File backupCsvFile = new File(backupCsv, "csvList");
-                FileWriter writer = new FileWriter(backupCsvFile);
-                for(Anime n : animeList) {
-                    writer.append(n.getTitle() +
-                            "," + n.getRating() +
-                            "," + n.getIsSketch() +
-                            "," + n.getUrl() + "\n");
+                OutputStream outputStream = getContentResolver().openOutputStream(result);
+                OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+                if(outputStream != null && writer != null) {
+                    for(Anime n : animeList) {
+                        writer.append(n.getTitle() +
+                                "," + n.getRating() +
+                                "," + n.getIsSketch() +
+                                "," + n.getUrl() + "\n");
+                    }
+                    writer.flush();
                 }
-                writer.flush();
                 writer.close();
+                outputStream.close();
             } catch (Exception exception) {
                 exception.printStackTrace();
                 Log.w("saveAsCSV", exception.toString());
                 throw new java.lang.UnsupportedOperationException();
             }
+        }
+    });
+
+    private ActivityResultLauncher<String> mRequestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), result -> {
+        if(result) {
+//                    toggle save support on
+        } else {
+            Snackbar.make(findViewById(R.id.list_anime),
+                    "The save csv function cannot be " +
+                            "used without permission to access files",
+                    Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
     });
 
@@ -143,7 +158,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveAsCSV() {
-        mSaveBackupFile.launch(null);
+//        TODO: It is possible that you must save directly to a dir that the code is located. or call media storage
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            mSaveBackupFile.launch("backup");
+        }
+        else if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Snackbar.make(
+                    findViewById(R.id.list_anime), "Bro I need perms", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            mRequestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            mRequestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
     }
 
     private void promptOpenFile() {

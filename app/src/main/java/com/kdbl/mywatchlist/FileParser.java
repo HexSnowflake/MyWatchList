@@ -30,14 +30,17 @@ public class FileParser {
         Queue<Anime> parsedList = new LinkedList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-            while(bufferedReader.readLine() != null) {
-                String[] extractedLine = bufferedReader.readLine().split(",");
+            String cur = bufferedReader.readLine();
+            while(cur != null) {
+                String[] extractedLine = cur.split(",");
                 parsedList.add(
                         new Anime(extractedLine[0],
                                 Integer.parseInt(extractedLine[1]),
                                 Boolean.parseBoolean(extractedLine[2]),
-                                extractedLine[3]));
+                                extractedLine.length == 4 ? extractedLine[3] : null));
+                cur = bufferedReader.readLine();
             }
+            bufferedReader.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             Log.w("parseCsvFile: failed to parse file", exception.toString());
@@ -81,6 +84,7 @@ public class FileParser {
                     Boolean.parseBoolean(cursor.getString(isSketchColPos)),
                     cursor.getString(urlColPos)));
         }
+        cursor.close();
         return animeList;
     }
 }
